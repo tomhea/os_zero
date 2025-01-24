@@ -13,6 +13,12 @@ Other than that - I want to replicate the feeling of a first day computer scient
 # My goal
 Create a stable and fast os, with graphics, network driver, build a basic browser, and be able to open youtube and watch a video (you can suggest which in the repo discussions).
 
+## How to get there
+My main idea is to write an assembler in opcode-bytes, run it, then assemble a compiler (written in assembly text) and run it, and then write the big os in that high level compiled language. Then program a file system, files, shell, simple cli-ide, graphics, real ide, and then write all the programs and drivers needed to achive the goal.
 # My Journey
+Here I'll write my OS versions, from first to current.
 ## Part 0 - hellos
 `hellos` is Hello World OS. You'll see that I'll give a name to every OS that I'm going to develop, until reaching `os_zero` - The complete one with the youtube.
+
+#### Fallbacks/Bugs:
+- Wrote the first os in big endien.
