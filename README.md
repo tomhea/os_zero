@@ -72,3 +72,9 @@ Unused memory will always be marked as `'A'` bytes.
 - Wrote the first os in big endien.
  - I initialy failed to encode 5 out of 10 opcodes. Encoding by hand is HARD.
  - I got wrong the loading address of the bios binary. (thought 0x1000, was 0x80000000). I tried writing an elf format in the hex editor, and it took me trial and error + debugging to understand what is needed - a non-elf binary file (first opcode in offset 0), that's loaded into address 0x80000000. At first I was afraid to use debugger, as it felt like cheating, but it was to understand qemu's ABI.
+
+
+## Part 1 - echos
+
+The next version will be able to get input. echos will get string as input and will echo it.
+
