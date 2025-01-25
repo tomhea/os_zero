@@ -21,8 +21,9 @@ Here I'll write my OS versions, from first to current.
 ## Part 0 - hellos
 `hellos` is Hello World OS. You'll see that I'll give a name to every OS that I'm going to develop, until reaching `os_zero` - The complete one with the youtube.
 I managed to write a single character to UART (output), 'T', using a "putc" assembly function. Calling twice makes a "TT" print. That's awesome.
+I decided to go 32bit as I think that'll be enough for our end-goal.
 
 #### Fallbacks/Bugs:
 - Wrote the first os in big endien.
  - I initialy failed to encode 5 out of 10 opcodes. Encoding by hand is HARD.
- - I got wrong the loading address of the bios binary. (thought 0x1000, was 0x80000000). I tried writing an elf format in the hex editor, and it took me trial and error + debugging to make it run. I was afraid to use debugger, as it feals like a cheat, but it was to understand how qemu works.
+ - I got wrong the loading address of the bios binary. (thought 0x1000, was 0x80000000). I tried writing an elf format in the hex editor, and it took me trial and error + debugging to understand what is needed - a non-elf binary file (first opcode in offset 0), that's loaded into address 0x80000000. At first I was afraid to use debugger, as it felt like cheating, but it was to understand qemu's ABI.
