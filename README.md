@@ -4,6 +4,7 @@ Developing RiscV OS with a hex editor
 That means that I dont have a compiler (thus no C or higher support), no assembler (so can't write in assembly), I litterly have to build it all myself. I only have 2 tools:
 - hex editor, for creating the os binary, and writing this documentation.
 - `qemu` for running the os. Line used: `qemu-system-riscv32 -M virt -m 2048 -serial mon:stdio -bios hellos`.
+    - I plan to use the next qemu devices: `-device VGA -drive file=mydisk.img,format=raw,if=none,id=drive0 -device virtio-blk,drive=drive0 -device e1000 -device virtio-keyboard -device virtio-mouse -device virtio-sound` (append it to the qemu line).
 
 The only things that separates me from the first days of computers, is that:
 - I have today's knowledge (I can search the web, but not copy anything).
