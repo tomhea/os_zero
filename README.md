@@ -53,11 +53,14 @@ Currently my first code is still in the Boot code region. My goal for `hellos` i
 
 I wrote a small Boot code, that sets `gp, sp`, saves `a0, a1, a2` as globals, and calls the First code. Has a stub that prints "\nFIN\n" if the First code returns. I called this os (with First code that just returns) - `finos`.
 
+I added two syscalls, `puts` (prints a string), and `exit`, and called them both from the First code to print "Hello, World!\n" (stored as a global). And it worked!
 
+`hellos` is done!
 
 #### Globals / Syscalls added:
-- `putc(c: char_a0) -> None` - `sys0` (uses `t0,t1`).
-- `puts(s: pointer_a0) -> None` - `sys20`
+- `putc(c: char_a0) -> None` - `sys0` (uses `t0,t1`, keeps `a0`).
+- `puts(s: pointer_a0) -> None` - `sys20` (keep all regs).
+- `exit() -> NO_RETURN` - `sys70` (infinite loop).
 - `boot_a0` - `g_FF4`.
 - `boot_a1` - `g_FF8`.
 - `boot_a2` - `g_FFC`.
