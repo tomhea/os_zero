@@ -56,10 +56,12 @@ I wrote a small Boot code, that sets `gp, sp`, saves `a0, a1, a2` as globals, an
 
 
 #### Globals / Syscalls added:
-- `putc(c: char_a0) -> None` - `sys0`.
-- `boot_a0` - `g_FE8`.
-- `boot_a1` - `g_FF0`.
-- `boot_a2` - `g_FF8`.
+- `putc(c: char_a0) -> None` - `sys0` (uses `t0,t1`).
+- `puts(s: pointer_a0) -> None` - `sys20`
+- `boot_a0` - `g_FF4`.
+- `boot_a1` - `g_FF8`.
+- `boot_a2` - `g_FFC`.
+- Rule: each `sys` is aligned to `0x10`, and each `global` is aligned to `0x4`.
 
 Unused memory will always be marked as `'A'` bytes.
 
