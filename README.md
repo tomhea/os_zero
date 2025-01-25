@@ -32,14 +32,14 @@ Here I'll write my OS versions, from first to current.
 
 `hellos` is Hello World OS. You'll see that I'll give a name to every OS that I'm going to develop, until reaching `os_zero` - The complete one with the youtube.
 
-I managed to write a single character to UART (output), 'T', using a "putc" assembly function. Calling twice makes a "TT" print. That's awesome.
+I managed to write a single character to UART (output), 'T', using a "putc" assembly function. Calling twice makes a "TT" print. That's awesome. I'll call this os `ttos`.
 
 I decided to go 32bit as I think that'll be enough for our end-goal.
 
 I decided about a rough "memory regions" partition (all hexadecimal numbers. `X:Y` means addresses from `X` up to `Y`, not including `Y`):
 - Stack: `FFFFFFF8` and downwords. The Ram is `80000000:100000000`
 - Fast syscalls: `80001000:80001800` (note that `gp=80001000`), so that's `gp:gp+800`. `putc` is at `gp+0`. I'll use the shortcut sysX for `gp+X`, so `putc` is `sys0`.
-- Global data: `80000800:80001000`, so `gp-800:gp`. I'll use the shortcut `gX` for `gp-1000+X`.
+- Global data: `80000800:80001000`, so `gp-800:gp`. I'll use the shortcut `g_X` for `gp-1000+X`.
 - Boot code: At `80000000`, jumps to the first code.
 - First code: At `80002000`.
 
@@ -47,6 +47,18 @@ I decided I'm gonna allow myself to use the "Text" window on my hex editor, and 
 and I justified this Text window for being ok because I basically do the same writing on my notebook. The only benefit here is that it's backed up, and That's fine by me.
 
 Currently my first code is still in the Boot code region. My goal for `hellos` is a First code at its region, that reads a string "Hello, World!\n\0" (from Global data maybe) and prints it (maybe as another `sys`).
+
+I wrote a small Boot code, that sets `gp, sp`, saves `a0, a1, a2` as globals, and calls the First code. Has a stub that prints "\nFIN\n" if the First code returns. I called this os (with First code that just returns) - `finos`.
+
+
+
+#### Globals / Syscalls added:
+- `putc(c: char_a0) -> None` - `sys0`.
+- `boot_a0` - `g_FE8`.
+- `boot_a1` - `g_FF0`.
+- `boot_a2` - `g_FF8`.
+
+Unused memory will always be marked as `'A'` bytes.
 
 #### Fallbacks/Bugs:
 - Wrote the first os in big endien.
