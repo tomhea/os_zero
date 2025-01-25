@@ -35,7 +35,7 @@ Here I'll write my OS versions, from first to current.
 I managed to write a single character to UART (output), 'T', using a "putc" assembly function. Calling twice makes a "TT" print. That's awesome. I'll call this os `ttos`.
 
 I added a `partial_os` folder to store working but not complete os-versions, which are a critical part of my way of getting to the actual next os-version).
-It's my way of saving versions, as I can't use a git-versioning until I develop one. You can look at each file in this folder as a backup disk, used to store only the current os on it.
+That's my way of saving versions, as I can't use a git-versioning until I develop one. You can look at each file in this folder as a backup disk, used to store only the current os on it.
 
 I decided to go 32bit as I think that'll be enough for our end-goal.
 
