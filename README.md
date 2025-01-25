@@ -2,7 +2,8 @@
 Developing RiscV OS with a hex editor
 That means that I dont have a compiler (thus no C or higher support), no assembler (so can't write in assembly), I litterly have to build it all myself. I only have 2 tools:
 - hex editor, for creating the os binary, and writing this documentation.
-- `qemu` for running the os. Line used: `qemu-system-riscv64 -machine virt -bios none -kernel kernel.elf -serial mon:stdio`.
+- `qemu` for running the os. Line used: `qemu-system-riscv32 -M v
+irt -m 2048 -serial mon:stdio -bios hellos`.
 
 The only things that separates me from the first days of computers, is that:
 - I have today's knowledge (I can search the web, but not copy anything).
@@ -19,6 +20,9 @@ My main idea is to write an assembler in opcode-bytes, run it, then assemble a c
 Here I'll write my OS versions, from first to current.
 ## Part 0 - hellos
 `hellos` is Hello World OS. You'll see that I'll give a name to every OS that I'm going to develop, until reaching `os_zero` - The complete one with the youtube.
+I managed to write a single character to UART (output), 'T', using a "putc" assembly function. Calling twice makes a "TT" print. That's awesome.
 
 #### Fallbacks/Bugs:
 - Wrote the first os in big endien.
+ - I initialy failed to encode 5 out of 10 opcodes. Encoding by hand is HARD.
+ - I got wrong the loading address of the bios binary. (thought 0x1000, was 0x80000000). I tried writing an elf format in the hex editor, and it took me trial and error + debugging to make it run. I was afraid to use debugger, as it feals like a cheat, but it was to understand how qemu works.
