@@ -76,21 +76,23 @@ Unused memory will always be marked as `'A'` bytes.
 
 
 
-## Part 1 - multi_hellos (**CURRENT**)
+## Part 1 - multi_hellos
 
 I decided to add the `-smp 4` (4 cores) support now, so the Boot code need to hande the other cores too.
 Currently adding this flag prints the "Hello, World!\n" string for times, which is great. I want to change it so that only the first core will run, and the rest will "sleep".
 
-I improved to boot code: It sets different stack for each process, based on `a0` (the hardware thread id). If it's the 0 thread then jump to the First code.
-If it's another thread id, then jump to a `wfi` which afterwards jumps to `multicore_boot_address` (initialized to the `wfi` address).
+I improved the current Boot code: It sets different stack for each process, based on `a0` (the hardware thread id). If it's the 0 thread then jump to the First code.
+If it's another thread id, then jump to a `wfi` which afterwards jumps to the address found in `multicore_boot_address` (initialized to the `wfi` address).
 It allows us to control when to "release" the other threads, and what code they should execute.
+
+`multi_hellos` is done!
 
 #### Globals / Syscalls added:
 - `multicore_boot_address - `g_FF0`.
 
 
 
-## Part 2 - echos (*not implemented yet*)
+## Part 2 - echos (**CURRENT**)
 
 The next version will be able to get input. echos will get string as input and will echo it.
 
