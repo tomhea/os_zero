@@ -3,7 +3,7 @@
 Developing RiscV OS with a hex editor
 That means that I dont have a compiler (thus no C or higher support), no assembler (so can't write in assembly), I litterly have to build it all myself. I only have 2 tools:
 - hex editor, for creating the os binary, and writing this documentation.
-- `qemu` for running the os. Line used: `qemu-system-riscv32 -M virt -m 2048 -serial mon:stdio -bios hellos`.
+- `qemu` for running the os. Line used: `qemu-system-riscv32 -M virt -m 2048 -serial mon:stdio -smp 4 -bios hellos`.
     - I plan to use the next qemu devices: `-device VGA -drive file=mydisk.img,format=raw,if=none,id=drive0 -device virtio-blk,drive=drive0 -device e1000 -device virtio-keyboard -device virtio-mouse -device virtio-sound` (append it to the qemu line).
 
 The only things that separates me from the first days of computers, is that:
@@ -75,7 +75,27 @@ Unused memory will always be marked as `'A'` bytes.
  - I got wrong the loading address of the bios binary. (thought 0x1000, was 0x80000000). I tried writing an elf format in the hex editor, and it took me trial and error + debugging to understand what is needed - a non-elf binary file (first opcode in offset 0), that's loaded into address 0x80000000. At first I was afraid to use debugger, as it felt like cheating, but it was to understand qemu's ABI.
 
 
-## Part 1 - echos
+
+## Part 1 - multi_hellos (**CURRENT**)
+
+I decided to add the `-smp 4` (4 cores) support now, so the Boot code need to hande the other cores too.
+Currently adding this flag prints the "Hello, World!\n" string for times, which is great. I want to change it so that only the first core will run, and the rest will "sleep".
+
+I improved to boot code: It sets different stack for each process, based on `a0` (the hardware thread id). If it's the 0 thread then jump to the First code.
+If it's another thread id, then jump to a `wfi` which afterwards jumps to `multicore_boot_address` (initialized to the `wfi` address).
+It allows us to control when to "release" the other threads, and what code they should execute.
+
+#### Globals / Syscalls added:
+- `multicore_boot_address - `g_FF0`.
+
+
+
+## Part 2 - echos (*not implemented yet*)
 
 The next version will be able to get input. echos will get string as input and will echo it.
 
+
+
+## Part 3 - hexos (*not implemented yet*)
+
+The next version will be able to print integers as exadecimal numbers.
