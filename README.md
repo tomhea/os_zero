@@ -105,7 +105,7 @@ I wrote a small program that inputs a char, increments it and prints it (`charos
 
 I added a First code that prints "Enter your name: ", calls gets(buf, 16), and then prints "Hello {buf}!\n".
 
-
+While encoding the `gets` function, I saw that I misencoded the `addi sp, sp, 0x14` at the end of `putc`. Fixed.
 
 #### Globals / Syscalls added:
 - `getc() -> char_a0` - `sys80` (uses `t0,t1`).
