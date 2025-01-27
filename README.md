@@ -103,10 +103,14 @@ I implemented `getc` that inputs a byte, and `availc` that returns wether an inp
 
 I wrote a small program that inputs a char, increments it and prints it (`charos`).
 
+I added a First code that prints "Enter your name: ", calls gets(buf, 16), and then prints "Hello {buf}!\n".
+
+
+
 #### Globals / Syscalls added:
 - `getc() -> char_a0` - `sys80` (uses `t0,t1`).
 - `availc() -> bool_a0` - `sysA0` (keep all regs) - **NOT CHECKED**.
-
+- `gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **NOT FINISHED**.
 
 ## Part 3 - hexos (*not implemented yet*)
 
