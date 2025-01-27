@@ -116,26 +116,36 @@ ret
 ```assembly
 // Writes a string from input to the given buffer, finishes when reached a newline / max_len-1. 
 // Ends the string with a null-char (and removes the ending newline).
-addi sp, sp, -0x14
+// Note: prepare a buffer of size max_len chars.
+addi sp, sp, -0x18
 sw x1, 0(sp)
 sw x5, 4(sp)
 sw x6, 8(sp)
 sw x7, 0xc(sp)
 sw x10, 0x10(sp)
+sw x11, 0x14(sp)
 
-addi x1, gp, 40  // return to loop:
-addi t2, a0, 0
-//loop:
-lbu a0, 0(t2)
+addi t2, a0, -1
+add a1, a1, t2
+//LOOP:
 addi t2, t2, 1
-bne a0, x0, -0x48  // Offset to sys0
+beq t2, a1, put_null_char_finish (+0x18)
+jalr x1, 0x80(gp)
+addi t0, zero, 0xA
+beq a0, t0, put_null_char_finish (+0xC)
+sb a0, 0(t2)
+beq zero, zero, LOOP (-0x18)
+
+//put_null_char_finish:
+sb zero, 0(t2)
 
 lw x1, 0(sp)
 lw x5, 4(sp)
 lw x6, 8(sp)
 lw x7, 0xc(sp)
 lw x10, 0x10(sp)
-addi sp, sp, 0x14
+lw x11, 0x14(sp)
+addi sp, sp, 0x18
 ret
 ```
 
