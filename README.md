@@ -99,9 +99,13 @@ This version will be able to get input. echos will get string as input and will 
 I decided that I need to be more organized, and that I'll allow myself writing multiple "notebooks" (yeah, I'm addressing markdowns as "Notebooks").
 I created the [bare_asm.md](bare_asm.md) for the actual assembly I coded in memory, and the memory regions.
 
+I implemented `getc` that inputs a byte, and `availc` that returns wether an input is available to be read.
+
+I wrote a small program that inputs a char, increments it and prints it (`charos`).
+
 #### Globals / Syscalls added:
 - `getc() -> char_a0` - `sys80` (uses `t0,t1`).
-
+- `availc() -> bool_a0` - `sysA0` (keep all regs) - **NOT CHECKED**.
 
 
 ## Part 3 - hexos (*not implemented yet*)

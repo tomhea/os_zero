@@ -51,6 +51,7 @@ All the implemented syscalls, in order:
 
 `putc(c: char_a0) -> None` - `sys0` (uses `t0,t1`, keeps `a0`).
 ```assembly
+// Prints the given byte.
 lui t0, 0x10000
 lb t1, 5(t0)
 andi t1, t1, 0x20
@@ -61,6 +62,7 @@ ret
 
 `puts(s: pointer_a0) -> None` - `sys20` (keep all regs).
 ```assembly
+// Prints a string.
 addi sp, sp, -0x14
 sw x1, 0(sp)
 sw x5, 4(sp)
@@ -86,16 +88,54 @@ ret
 
 `exit() -> NO_RETURN` - `sys70` (infinite loop).
 ```assembly
+// Self loop.
 beq zero, zero, 0
 ```
 
 `getc() -> char_a0` - `sys80` (uses `t0,t1`).
 ```assembly
+// Get a char from stdin (blocking).
 lui t0, 0x10000
 lb t1, 5(t0)
 andi t1, t1, 0x1
 beq t1, x0, -8
 lbu a0, 0(t0)
+ret
+```
+
+`availc() -> bool_a0` - `sysA0` (keep all regs) - **NOT CHECKED**.
+```assembly
+// Checks if there is an input byte ready to be read.
+lui a0, 0x10000
+lb a0, 5(a0)
+andi a0, a0, 0x1
+ret
+```
+
+`gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **NOT FINISHED**.
+```assembly
+// Writes a string from input to the given buffer, finishes when reached a newline / max_len-1. 
+// Ends the string with a null-char (and removes the ending newline).
+addi sp, sp, -0x14
+sw x1, 0(sp)
+sw x5, 4(sp)
+sw x6, 8(sp)
+sw x7, 0xc(sp)
+sw x10, 0x10(sp)
+
+addi x1, gp, 40  // return to loop:
+addi t2, a0, 0
+//loop:
+lbu a0, 0(t2)
+addi t2, t2, 1
+bne a0, x0, -0x48  // Offset to sys0
+
+lw x1, 0(sp)
+lw x5, 4(sp)
+lw x6, 8(sp)
+lw x7, 0xc(sp)
+lw x10, 0x10(sp)
+addi sp, sp, 0x14
 ret
 ```
 
