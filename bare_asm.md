@@ -156,6 +156,45 @@ addi sp, sp, 0x18
 ret
 ```
 
+`putx(hex: a0) -> None` - `sys130` (keep all regs).
+```assembly
+// This function prints a0 as an 8-digit hexadecimal number (first char is the most-significant hex digit).
+addi sp, sp, -0x1C
+sw x1, 0(sp)
+sw x5, 4(sp)
+sw x6, 8(sp)
+sw x7, 0xc(sp)
+sw x10, 0x10(sp)
+sw x11, 0x14(sp)
+sw x12, 0x18(sp)
+
+addi a1, a0, 0
+addi x7, x0, 0x20
+addi x12, zero, 0x3A
+
+//loop:
+addi x7, x7, 0xFFC
+srl a0, a1, x7
+andi a0, a0, 0xF
+addi a0, a0, 0x30
+blt a0, a2, 8
+addi a0, a0, 0x7
+jalr x1, 0(gp)
+bne x7, x0, -0x1C
+
+lw x1, 0(sp)
+lw x5, 4(sp)
+lw x6, 8(sp)
+lw x7, 0xc(sp)
+lw x10, 0x10(sp)
+lw x11, 0x14(sp)
+lw x12, 0x18(sp)
+addi sp, sp, 0x1C
+ret
+```
+
+
+
 ## globals
 - `boot_a0` - `g_FF4` - holds the initial a0, hart-id (hardware thread id).
 - `boot_a1` - `g_FF8` - holds the initial a1, the device tree.

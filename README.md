@@ -109,7 +109,9 @@ While encoding the `gets` function, I saw that I misencoded the `addi sp, sp, 0x
 
 I created a working echos! It prints "Hello {buf}!", but it doesn't print any of the characters live (like, it doesn't show anything until you press "Enter". I call it `ghost_echos`.
 
-I added a print to every char (and replaced \r with a \n print). Now `echos` is finished!
+I added a print to every char (and replaced \r with a \n print). 
+
+`echos` is done!
 
 #### Globals / Syscalls added:
 - `getc() -> char_a0` - `sys80` (uses `t0,t1`).
@@ -121,6 +123,23 @@ I added a print to every char (and replaced \r with a \n print). Now `echos` is 
 
 
 
-## Part 3 - hexos (**CURRENT**)
+## Part 3 - hexos
 
-The current version will be able to print integers as exadecimal numbers.
+I want to be able to print registers, numbers. 
+This os version version will be dedicated to print 4-byte hexadecimal values.
+
+Of course, I managed to find a bug in `gets` from the previous version - `a1` was stored on the `a0` stack spot.
+
+I implemented the hex print, and it works perfectly.
+
+`hexos` is done!
+
+#### Globals / Syscalls added:
+- `putx(hex: a0) -> None` - `sys130` (keep all regs).
+
+
+
+## Part 4 - asos (**NEXT**)
+
+This version will be an actual assembler, written byte by byte, to assemble a piece of memory as text, into assembly binary, and execute it.
+It will allow me to continue much more easily after it's done, and very tested.
