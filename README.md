@@ -141,5 +141,7 @@ I implemented the hex print, and it works perfectly.
 
 ## Part 4 - asos (**NEXT**)
 
+`asos` is **as**sembly **os**.
+
 This version will be an actual assembler, written byte by byte, to assemble a piece of memory as text, into assembly binary, and execute it.
 It will allow me to continue much more easily after it's done, and very tested.
