@@ -112,7 +112,7 @@ andi a0, a0, 0x1
 ret
 ```
 
-`gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **NOT FINISHED**.
+`gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs).
 ```assembly
 // Reads at most max_len-1 bytes from input, and writes them as a string to the given buffer.
 // Also stops at a newline. Ends the string with a null-char (and removes the ending newline).

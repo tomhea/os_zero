@@ -114,7 +114,7 @@ I added a print to every char (and replaced \r with a \n print). Now `echos` is 
 #### Globals / Syscalls added:
 - `getc() -> char_a0` - `sys80` (uses `t0,t1`).
 - `availc() -> bool_a0` - `sysA0` (keep all regs) - **NOT CHECKED**.
-- `gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **NOT FINISHED**.
+- `gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs).
 
 #### Fallbacks/Bugs:
 - I implemented `gets` to stop only of '\n', but my keybord actually only generated '\r', so I needed to add another check.
