@@ -114,9 +114,10 @@ ret
 
 `gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **NOT FINISHED**.
 ```assembly
-// Writes a string from input to the given buffer, finishes when reached a newline / max_len-1. 
-// Ends the string with a null-char (and removes the ending newline).
+// Reads at most max_len-1 bytes from input, and writes them as a string to the given buffer.
+// Also stops at a newline. Ends the string with a null-char (and removes the ending newline).
 // Note: prepare a buffer of size max_len chars.
+// Note prints every char it gets.
 addi sp, sp, -0x18
 sw x1, 0(sp)
 sw x5, 4(sp)
@@ -129,13 +130,19 @@ addi t2, a0, -1
 add a1, a1, t2
 //LOOP:
 addi t2, t2, 1
-beq t2, a1, put_null_char_finish (+0x18)
+beq t2, a1, put_null_char_finish (+0x2C)
 jalr x1, 0x80(gp)
 addi t0, zero, 0xA
-beq a0, t0, put_null_char_finish (+0xC)
+beq a0, t0, print_newline_and_finish (+0x18)
+addi t0, zero, 0xD
+beq a0, t0, print_newline_and_finish (+0x10)
 sb a0, 0(t2)
-beq zero, zero, LOOP (-0x18)
+jalr x1, 0(gp)
+beq zero, zero, LOOP (-0x24)
 
+//print_newline_and_finish:
+addi a0, zero, 0xA
+jalr x1, 0(gp)
 //put_null_char_finish:
 sb zero, 0(t2)
 

@@ -71,8 +71,8 @@ Unused memory will always be marked as `'A'` bytes.
 
 #### Fallbacks/Bugs:
 - Wrote the first os in big endien.
- - I initialy failed to encode 5 out of 10 opcodes. Encoding by hand is HARD.
- - I got wrong the loading address of the bios binary. (thought 0x1000, was 0x80000000). I tried writing an elf format in the hex editor, and it took me trial and error + debugging to understand what is needed - a non-elf binary file (first opcode in offset 0), that's loaded into address 0x80000000. At first I was afraid to use debugger, as it felt like cheating, but it was to understand qemu's ABI.
+- I initialy failed to encode 5 out of 10 opcodes. Encoding by hand is HARD.
+- I got wrong the loading address of the bios binary. (thought 0x1000, was 0x80000000). I tried writing an elf format in the hex editor, and it took me trial and error + debugging to understand what is needed - a non-elf binary file (first opcode in offset 0), that's loaded into address 0x80000000. At first I was afraid to use debugger, as it felt like cheating, but it was to understand qemu's ABI.
 
 
 
@@ -92,7 +92,7 @@ It allows us to control when to "release" the other threads, and what code they 
 
 
 
-## Part 2 - echos (**CURRENT**)
+## Part 2 - echos
 
 This version will be able to get input. echos will get string as input and will echo it.
 
@@ -107,11 +107,20 @@ I added a First code that prints "Enter your name: ", calls gets(buf, 16), and t
 
 While encoding the `gets` function, I saw that I misencoded the `addi sp, sp, 0x14` at the end of `putc`. Fixed.
 
+I created a working echos! It prints "Hello {buf}!", but it doesn't print any of the characters live (like, it doesn't show anything until you press "Enter". I call it `ghost_echos`.
+
+I added a print to every char (and replaced \r with a \n print). Now `echos` is finished!
+
 #### Globals / Syscalls added:
 - `getc() -> char_a0` - `sys80` (uses `t0,t1`).
 - `availc() -> bool_a0` - `sysA0` (keep all regs) - **NOT CHECKED**.
 - `gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **NOT FINISHED**.
 
-## Part 3 - hexos (*not implemented yet*)
+#### Fallbacks/Bugs:
+- I implemented `gets` to stop only of '\n', but my keybord actually only generated '\r', so I needed to add another check.
 
-The next version will be able to print integers as exadecimal numbers.
+
+
+## Part 3 - hexos (**CURRENT**)
+
+The current version will be able to print integers as exadecimal numbers.
