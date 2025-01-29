@@ -126,7 +126,7 @@ I added a print to every char (and replaced \r with a \n print).
 ## Part 3 - hexos
 
 I want to be able to print registers, numbers. 
-This os version version will be dedicated to print 4-byte hexadecimal values.
+This os version version will be dedicated to print 4-byte hexadecimal values - thus `hexos`.
 
 Of course, I managed to find a bug in `gets` from the previous version - `a1` was stored on the `a0` stack spot.
 
@@ -139,7 +139,17 @@ I implemented the hex print, and it works perfectly.
 
 
 
-## Part 4 - asos (**NEXT**)
+## Part 4 - dictos (**CURRENT**)
+
+In this operation system I'm going to implement a dictionary data structure (256-bins hashmap) using hand-coded assembly, Thus - `dictos`.
+It will be very helpful for writing an assembler in the future version, `asos`.
+The dictionary will only have "Init, Get, Insert", and no delete. 
+
+For this dynamic data structure I'm going to intrucduce a "heap" - for allocating 16 bytes of data.
+
+
+
+## Part 5 - asos (**NEXT**)
 
 `asos` is **as**sembly **os**.
 
