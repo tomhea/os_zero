@@ -139,17 +139,44 @@ I implemented the hex print, and it works perfectly.
 
 
 
-## Part 4 - dictos (**CURRENT**)
+## Part 4 - testos (**CURRENT**)
+
+I think that before going further, I must have some testing support, and "testing routine". Thus - `testos`.
+
+In this operation system version I'm going to implement multiple testing functions (That will print errors on test failures),
+and test every existing `sysX` function.
+
+Adding testing capabilities this early, will hopefully lead me to keep my entire operation system tested at every phase of the process. That's exciting! So I have to do a good job in this part.
+
+#### Globals / Syscalls added:
+- `assert_ret_a0(ret_val: a0, expected: a1) -> None` - `sysUPDATE` (print if assertion failed; may modify registers UPDATE WHICH).
+- `assert_ret_a0_a1(ret_val_0: a0, ret_val_1: a1, expected_0: a2, expected_1: a3) -> None` - `sysUPDATE` (print if assertion failed; may modify registers UPDATE WHICH).
+- `put_regs_test_values() -> None` - `sysUPDATE` (keep all regs).
+- `store_all_regs() -> None` - `sysUPDATE` (keep all regs except sp).
+- `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp).
+- `testing_mask` - `g_FEC`
+
+
+
+## Part 5 - allocos (**NEXT**)
+
+`allocos` is dynamic **alloc**ation **os**.
+
+In this os I'm gonna implement a very simple dynamic allocation functionality: `brk`, `sbrk`. Of course, they'll be tested.
+The allocation will have a specific memory chunk to allocate from it: 0x81000000 -> 0x81FFFFFF.
+
+
+
+## Part 6 - dictos (**NEXT**)
 
 In this operation system I'm going to implement a dictionary data structure (256-bins hashmap) using hand-coded assembly, Thus - `dictos`.
 It will be very helpful for writing an assembler in the future version, `asos`.
 The dictionary will only have "Init, Get, Insert", and no delete. 
-
-For this dynamic data structure I'm going to intrucduce a "heap" - for allocating 16 bytes of data.
-
+For it's dynamic nature, it could use the `sbrk()` as node allocations for the bins.
 
 
-## Part 5 - asos (**NEXT**)
+
+## Part 7 - asos (**NEXT**)
 
 `asos` is **as**sembly **os**.
 

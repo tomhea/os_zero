@@ -200,3 +200,7 @@ ret
 - `boot_a1` - `g_FF8` - holds the initial a1, the device tree.
 - `boot_a2` - `g_FFC` - holds the initial a2, the `struct fw_dynamic_info`.
 - `multicore_boot_address - `g_FF0` - holds the address that the non-0 harts will jump to on an interrupt.
+- `testing_mask` - `g_FEC` - holds the "which tests to run" flags. 0xFFFFFFFF means to run all tests.
+    - bit `0` - Run the `sys` test suite.
+    - bit `30` - Run tests that output things.
+    - bit `31` - Run tests that require specific input.
