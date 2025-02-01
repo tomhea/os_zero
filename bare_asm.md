@@ -10,6 +10,7 @@ In this notebook you could find the TEXTUAL ASSEMBLY (WOW) that I personally enc
 - Fast syscalls: `80001000:80001800`, so that's `gp:gp+800`. `putc` is at `gp+0`. I'll use the shortcut sysX for `gp+X`, so `putc` is `sys0`.
 - Global data: `80000800:80001000`, so `gp-800:gp`. I'll use the shortcut `g_X` for `gp-1000+X`.
 - First code: At `80002000`.
+- syscalls implementations: `80004000:80010000`. Some functions in the `Fast syscalls` sections are "jumpers" into this section.
 - Stack: `FFFFFFF8` and downwords.
 
 Notes:
@@ -192,6 +193,50 @@ lw x12, 0x18(sp)
 addi sp, sp, 0x1C
 ret
 ```
+
+`assert_ret_a0(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER_4000 (keep all regs).
+```assembly
+// This function checks if a0 equals a1, and if not - prints this test failure (a0, a1, x1 values, and a2 message).
+bne a0, a1, 0xC
+lw x1, FFC(x2)
+jalr x0, 0(x1)
+
+addi sp, sp, 0xFF8
+sw a0, 0(sp)
+
+addi a0, gp, 0x800
+jalr x1, 0x20(gp)
+addi a0, a2, 0
+jalr x1, 0x20(gp)
+
+addi a0, gp, 0x810
+jalr x1, 0x20(gp)
+lw a0, 4(sp)
+jalr x1, 0x130(gp)
+
+addi a0, gp, 0x818
+jalr x1, 0x20(gp)
+addi a0, a1, 0
+jalr x1, 0x130(gp)
+
+addi a0, gp, 0x828
+jalr x1, 0x20(gp)
+lw a0, 0(sp)
+jalr x1, 0x130(gp)
+
+addi a0, gp, 0x834
+jalr x1, 0x20(gp)
+
+lw a0, 0(sp)
+lw x1, 4(sp)
+addi sp, sp, 0x8
+jalr x0, 0(x1)
+```
+
+
+Notes:
+1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.
+   - JUMPER_XXXX means that the implementation is stored at 0x8001XXXX.
 
 
 

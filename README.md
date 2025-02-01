@@ -148,9 +148,17 @@ and test every existing `sysX` function.
 
 Adding testing capabilities this early, will hopefully lead me to keep my entire operation system tested at every phase of the process. That's exciting! So I have to do a good job in this part.
 
+My 0x800 space after `$gp` is running out, so I'm gonna start using it as a "jumpt to" table, in the next way:
+sysXX0 will now only take 12 bytes (+4 more reserved): `sw x1, FFC(x2)`, `lui x1 0x?????`, `jalr x0, 0x???(x1)`. The jumped address will be responsible for doing the `addi sp, sp, FFC` part.
+Note that the current 7 sys funcs already used `0x1A0` bytes. 
+Making this change now will let me use the next `0x660` bytes as 102 more functions. That will probably be enough for the assembler functionality, and if not, we could find a future solution for that.
+
+Ok, so let's create the first function - `assert_ret_a0`.
+I need to find a place for the function's body. I'll designate the next section for this part: 0x80004000-0x8000FFFF.
+
+
 #### Globals / Syscalls added:
-- `assert_ret_a0(ret_val: a0, expected: a1) -> None` - `sysUPDATE` (print if assertion failed; may modify registers UPDATE WHICH).
-- `assert_ret_a0_a1(ret_val_0: a0, ret_val_1: a1, expected_0: a2, expected_1: a3) -> None` - `sysUPDATE` (print if assertion failed; may modify registers UPDATE WHICH).
+- `assert_ret_a0(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
 - `put_regs_test_values() -> None` - `sysUPDATE` (keep all regs).
 - `store_all_regs() -> None` - `sysUPDATE` (keep all regs except sp).
 - `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp).
