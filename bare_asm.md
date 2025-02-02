@@ -247,10 +247,22 @@ lw x1, FFC(sp)
 jalr x0, 0(x1)
 ```
 
+`store_all_regs() -> None` - `sys1C0` JUMPER_4100 (keep all regs except sp)
+```assembly
+lw x1, FFC(sp)
+addi sp, sp, 0xF90
+sw x4, 0(sp)
+sw x5, 4(sp)
+...
+sw x31, 0x6C
+jalr x0, 0(x1)
+```
+
+
 
 Notes:
 1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.
-   - JUMPER_XXXX means that the implementation is stored at 0x8001XXXX.
+   - JUMPER_XXXX means that the implementation is stored at 0x8000XXXX.
 
 
 

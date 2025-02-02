@@ -161,13 +161,26 @@ I also a `tests_failure` global, that initialized with 1 but set to 0 on any tes
 
 It took time to encode this function. Hopefully the next will be easier.
 
+I proceeded to implement both `put_regs_test_values()` and `store_all_regs()`, and tested them together.
+
+First code is now:
+- 80002000-80002010: Check `assert_ret`.
+- 80002010-8000203C: Check `put_regs_test_values, store_all_regs`.
+- 8000203C-80002058: Print the `tests_success` boolean, and finish.
+
+I'll have to have some kind of documentation + order of the "First code" section, as now the data their might get lost. 
+I want this `testos` to also define exactly how the "First code" shouls look like.
+
+My first idea is to have it "First code" to lie in addresses 80002000-80004000, and it will be responsible for setting up the tests and running them, and afterwords to jump to the assembler code in 0x80010000.
+Each test in the first code will be documented in a separate document "binary_tests.md".
+
 #### Globals / Syscalls added:
 - `assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
 - `put_regs_test_values() -> None` - `sys1B0` JUMPER (modifies all regs) (**IMPLEMENTED, NOT CHECKED**).
-- `store_all_regs() -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
+- `store_all_regs() -> None` - `sys1C0` JUMPER (keep all regs except sp) (**IMPLEMENTED, NOT CHECKED**).
 - `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
 - `testing_mask` - `g_FEC`
-- `tests_failure` - `g_FE8`
+- `tests_success` - `g_FE8`
 
 
 
