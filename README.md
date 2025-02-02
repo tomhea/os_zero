@@ -163,7 +163,7 @@ It took time to encode this function. Hopefully the next will be easier.
 
 #### Globals / Syscalls added:
 - `assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
-- `put_regs_test_values() -> None` - `sysUPDATE` (keep all regs) (**NOT IMPLEMENTED**).
+- `put_regs_test_values() -> None` - `sys1B0` JUMPER (modifies all regs) (**IMPLEMENTED, NOT CHECKED**).
 - `store_all_regs() -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
 - `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
 - `testing_mask` - `g_FEC`

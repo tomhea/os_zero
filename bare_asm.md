@@ -235,6 +235,18 @@ addi sp, sp, 0x8
 jalr x0, 0(x1)
 ```
 
+`put_regs_test_values() -> None` - `sys1B0` JUMPER_4080 (modifies all regs) (Implemented, NOT CHECKT)
+```assembly
+// Loads the immediate N for each register xN (for N>=4, N<=31).
+addi x4, zero, 4
+addi x5, zero, 5
+...
+addi x31, zero, 31
+
+lw x1, FFC(sp)
+jalr x0, 0(x1)
+```
+
 
 Notes:
 1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.
