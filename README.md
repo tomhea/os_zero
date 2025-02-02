@@ -153,16 +153,21 @@ sysXX0 will now only take 12 bytes (+4 more reserved): `sw x1, FFC(x2)`, `lui x1
 Note that the current 7 sys funcs already used `0x1A0` bytes. 
 Making this change now will let me use the next `0x660` bytes as 102 more functions. That will probably be enough for the assembler functionality, and if not, we could find a future solution for that.
 
-Ok, so let's create the first function - `assert_ret_a0`.
+Ok, so let's create the first function - `assert_ret`.
 I need to find a place for the function's body. I'll designate the next section for this part: 0x80004000-0x8000FFFF.
 
+I implemented the `assert_ret`!
+I also a `tests_failure` global, that initialized with 1 but set to 0 on any test failed (by the testing functions). It gets printed at the end of the First code.
+
+It took time to encode this function. Hopefully the next will be easier.
 
 #### Globals / Syscalls added:
-- `assert_ret_a0(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
-- `put_regs_test_values() -> None` - `sysUPDATE` (keep all regs).
-- `store_all_regs() -> None` - `sysUPDATE` (keep all regs except sp).
-- `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp).
+- `assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
+- `put_regs_test_values() -> None` - `sysUPDATE` (keep all regs) (**NOT IMPLEMENTED**).
+- `store_all_regs() -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
+- `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
 - `testing_mask` - `g_FEC`
+- `tests_failure` - `g_FE8`
 
 
 

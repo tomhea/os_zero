@@ -194,18 +194,20 @@ addi sp, sp, 0x1C
 ret
 ```
 
-`assert_ret_a0(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER_4000 (keep all regs).
+`assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER_4000 (keep all regs).
 ```assembly
-// This function checks if a0 equals a1, and if not - prints this test failure (a0, a1, x1 values, and a2 message).
+// This function checks if a0 equals a1, and if not - prints this test failure (a0, a1, x1 values, and a2 message if not null).
 bne a0, a1, 0xC
 lw x1, FFC(x2)
 jalr x0, 0(x1)
 
 addi sp, sp, 0xFF8
 sw a0, 0(sp)
+sw zero, FE8(gp)
 
 addi a0, gp, 0x800
 jalr x1, 0x20(gp)
+beq a2, zero, 0xC
 addi a0, a2, 0
 jalr x1, 0x20(gp)
 
@@ -249,3 +251,4 @@ Notes:
     - bit `0` - Run the `sys` test suite.
     - bit `30` - Run tests that output things.
     - bit `31` - Run tests that require specific input.
+- `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
