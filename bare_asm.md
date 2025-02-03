@@ -267,8 +267,9 @@ jalr x0, 0(x1)
 // Prints error if global `tests_success` in off, and anyway sets it on again.
 lw x1, FFC(x2)
 lw a0, FE8(gp)
-beq a0, s1, 0x10
+beq a0, s1, 0x14
 
+sw zero, FE0(gp)
 sw s1, FE8(gp)
 addi a0, gp, 0x850
 jalr x0, 0x20(gp)
@@ -281,8 +282,9 @@ jalr x0, 0(x1)
 // Prints error if global `tests_success` in on, and anyway sets it on again.
 lw x1, FFC(x2)
 lw a0, FE8(gp)
-beq a0, zero, 0xC
+beq a0, zero, 0x10
 
+sw zero, FE0(gp)
 addi a0, gp, 0x884
 jalr x0, 0x20(gp)
 
@@ -309,6 +311,7 @@ Notes:
     - bit `31` - Run tests that require specific input.
 - `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
 - `test_print_on_failure` - `g_FE4` - if true (1), the testing functions doesn't print on test failures, just update the `tests_success` boolean.
+- `testing_tests_success` - `g_FE0` - if true (1), the testing of the testing functions was successful (0 otherwise).
 - `manual_test` values:
    - `g_FD0` - Tested equals to 0x123 in assert_ret.
    - `g_FD4` - Tested wasn't changed from 0xC in put_regs_test_values + store_all_regs.

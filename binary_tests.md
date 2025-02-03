@@ -19,9 +19,9 @@ Notes:
 #### Prep for these tests: (80002000-80002010)
 ```assembly
 addi s1, zero, 1
-sw s1, FE8(gp)
 sw zero, FE4(gp)
-addi zero, zero, 0  // nop (OP 13000000)
+nop  // OP 13000000
+nop
 ```
 
 #### Test `assert_ret` (80002010-80002030)
@@ -40,6 +40,21 @@ jalr x1, 1E0(gp)
 #### Test `store_all_regs` and `put_regs_test_values` (80002010-80002040)
 ```assembly
 
+```
+
+
+#### Finishing code for these tests: (???-???)
+```assembly
+lw x1, FE0(gp)
+sw x1, FE8(gp)
+
+
+// code to print the test_success result.
+
+OR
+
+lui x1, UPPER
+jalr x0, LOW(x1)  // Start of the regular syscalls testing.
 ```
 
 

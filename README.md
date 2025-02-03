@@ -195,6 +195,7 @@ My goal now is to write a documented First code that tests all 4 testing functio
 - `testing_mask` - `g_FEC`
 - `tests_success` - `g_FE8`
 - `test_print_on_failure` - `g_FE4`
+- `testing_tests_success` - `g_FE0`.
 
 
 ## Part 5 - allocos (**NEXT**)
