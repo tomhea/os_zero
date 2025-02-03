@@ -174,14 +174,27 @@ I want this `testos` to also define exactly how the "First code" shouls look lik
 My first idea is to have it "First code" to lie in addresses 80002000-80004000, and it will be responsible for setting up the tests and running them, and afterwords to jump to the assembler code in 0x80010000.
 Each test in the first code will be documented in a separate document "binary_tests.md".
 
+I decided to have all of my tests automatic - means that I won't have to manually change the testing-opcode-bytes each time to make sure all cases work.
+It actually only matters for testing the testing functions. I decided of having two "atomic" testing functions, which are as simple as they can be:
+- `assert_test_success` - For making sure the global `tests_success` in on. Prints if not, and anyway sets it on again.
+- `assert_test_failure` - For making sure the global `tests_success` in off. Prints if not, and anyway sets it on again.
+
+I really see myself digging too deep here, as why didn't I called the previous testing functions "atomic"? Well, here I took extra measures. Not sure if it was really needed, but it's better checked in that way.
+
+My goal now is to write a documented First code that tests all 4 testing functions (of course, to implement the 4th too). This os version will be called `tested_test_funcsos`.
+
+
+
 #### Globals / Syscalls added:
+- `assert_test_success() -> None` - `sys1D0` JUMPER (modifies a0, relies on `s1==1`).
+- `assert_test_failure() -> None` - `sys1E0` JUMPER (modifies a0, relies on `s1==1`).
 - `assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
 - `put_regs_test_values() -> None` - `sys1B0` JUMPER (modifies all regs) (**IMPLEMENTED, NOT CHECKED**).
 - `store_all_regs() -> None` - `sys1C0` JUMPER (keep all regs except sp) (**IMPLEMENTED, NOT CHECKED**).
 - `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
 - `testing_mask` - `g_FEC`
 - `tests_success` - `g_FE8`
-
+- `test_print_on_failure` - `g_FE4`
 
 
 ## Part 5 - allocos (**NEXT**)

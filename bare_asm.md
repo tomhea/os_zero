@@ -197,13 +197,17 @@ ret
 `assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER_4000 (keep all regs).
 ```assembly
 // This function checks if a0 equals a1, and if not - prints this test failure (a0, a1, x1 values, and a2 message if not null).
+// If test_print_on_failure global is off - Don't print anything (also ignore a2), just update the tests_success global if needed.
 bne a0, a1, 0xC
 lw x1, FFC(x2)
 jalr x0, 0(x1)
 
+sw zero, FE8(gp)
+lw x1, FE4(gp)
+beq x1, zero, FF0
+
 addi sp, sp, 0xFF8
 sw a0, 0(sp)
-sw zero, FE8(gp)
 
 addi a0, gp, 0x800
 jalr x1, 0x20(gp)
@@ -258,11 +262,39 @@ sw x31, 0x6C
 jalr x0, 0(x1)
 ```
 
+`assert_test_success() -> None` - `sys1D0` JUMPER_4180 (modifies a0, relies on `s1==1`) (**ATOMIC**).
+```assembly
+// Prints error if global `tests_success` in off, and anyway sets it on again.
+lw x1, FFC(x2)
+lw a0, FE8(gp)
+beq a0, s1, 0x10
+
+sw s1, FE8(gp)
+addi a0, gp, 0x850
+jalr x0, 0x20(gp)
+
+jalr x0, 0(x1)
+```
+
+`assert_test_failure() -> None` - `sys1E0` JUMPER_41A0 (modifies a0, relies on `s1==1`) (**ATOMIC**).
+```assembly
+// Prints error if global `tests_success` in on, and anyway sets it on again.
+lw x1, FFC(x2)
+lw a0, FE8(gp)
+beq a0, zero, 0xC
+
+addi a0, gp, 0x884
+jalr x0, 0x20(gp)
+
+sw s1, FE8(gp)
+jalr x0, 0(x1)
+```
 
 
 Notes:
 1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.
    - JUMPER_XXXX means that the implementation is stored at 0x8000XXXX.
+2. ATOMIC: Doesn't have automatic tests.
 
 
 
@@ -276,6 +308,7 @@ Notes:
     - bit `30` - Run tests that output things.
     - bit `31` - Run tests that require specific input.
 - `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
+- `test_print_on_failure` - `g_FE4` - if true (1), the testing functions doesn't print on test failures, just update the `tests_success` boolean.
 - `manual_test` values:
    - `g_FD0` - Tested equals to 0x123 in assert_ret.
    - `g_FD4` - Tested wasn't changed from 0xC in put_regs_test_values + store_all_regs.
