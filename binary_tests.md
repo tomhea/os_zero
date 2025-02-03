@@ -24,7 +24,7 @@ nop  // OP 13000000
 nop
 ```
 
-#### Test `assert_ret` (80002010-80002030)
+#### Test `assert_ret`: (80002010-80002030)
 ```assembly
 addi a0, zero, 0x123
 addi a1, zero, 0x123
@@ -37,7 +37,7 @@ jalr x1, 1A0(gp)
 jalr x1, 1E0(gp)
 ```
 
-#### Test `store_all_regs` and `put_regs_test_values` (80002010-80002040)
+#### Test `store_all_regs` and `put_regs_test_values`: (80002030-80002060)
 ```assembly
 
 ```
@@ -47,15 +47,28 @@ jalr x1, 1E0(gp)
 ```assembly
 lw x1, FE0(gp)
 sw x1, FE8(gp)
+sw s1, FE4(gp)
 
-
-// code to print the test_success result.
-
-OR
-
-lui x1, UPPER
-jalr x0, LOW(x1)  // Start of the regular syscalls testing.
+// Print `tests_success` and exit.
+addi a0, gp, 0x840
+jalr x1, 20(gp)
+lw a0, FE8(gp)
+jalr x1, 130(gp)
+addi a0, gp, 0x834
+jalr x1, 20(gp)
+jalr x1, 70(gp)
 ```
+
+#### Test `put, store, store, validate`:
+```assembly
+
+```
+
+#### Test sanity demi-function complete validation:
+```assembly
+
+```
+
 
 
 # Regular Funtions Tests
