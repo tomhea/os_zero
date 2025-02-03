@@ -276,3 +276,8 @@ Notes:
     - bit `30` - Run tests that output things.
     - bit `31` - Run tests that require specific input.
 - `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
+- `manual_test` values:
+   - `g_FD0` - Tested equals to 0x123 in assert_ret.
+   - `g_FD4` - Tested wasn't changed from 0xC in put_regs_test_values + store_all_regs.
+   - `g_FD8` - Tested equeals 0xE in Store Store Validate test.
+   - `g_FDC` - Tested equals to 0x17 in the Demi-FullTest.
