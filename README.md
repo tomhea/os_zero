@@ -183,7 +183,9 @@ I really see myself digging too deep here, as why didn't I called the previous t
 
 My goal now is to write a documented First code that tests all 4 testing functions (of course, to implement the 4th too). This os version will be called `tested_test_funcsos`.
 
-I completed testing the `assert_ret` for both sanity and failure, with the new atomic functions!
+I completed testing the `assert_ret`, and the `put+store` combination, for both sanity and failure, with the new atomic functions!
+
+
 
 #### Globals / Syscalls added:
 - `assert_test_success() -> None` - `sys1D0` JUMPER (modifies a0, relies on `s1==1`).

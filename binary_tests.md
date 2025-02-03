@@ -37,10 +37,48 @@ jalr x1, 1A0(gp)
 jalr x1, 1E0(gp)
 ```
 
-#### Test `store_all_regs` and `put_regs_test_values`: (80002030-80002060)
+#### Test sanity `store_all_regs` and `put_regs_test_values`: (80002030-80002068)
 ```assembly
+jalr x1, 1B0(gp)
+jalr x1, 1C0(gp)
+addi a3, zero, 0x20
+addi a2, zero, 0
+addi a4, sp, 0    // memory pointer
+addi a1, zero, 4  // register index
 
+// LOOP:
+lw a0, 0(a4)
+jalr x1, 0x1A0(gp)
+addi a1, a1, 1
+addi a4, a4, 4
+bne a1, a3, FF0  // LOOP
+
+addi s1, zero, 1
+jalr x1, 1D0(gp)
+addi sp, sp, 0x70
 ```
+
+#### Test failure `store_all_regs` and `put_regs_test_values`: (800020A0)
+```assembly
+jalr x1, 1B0(gp)
+addi s1, zero, 1
+jalr x1, 1C0(gp)
+addi a3, zero, 0x20
+addi a2, zero, 0
+addi a4, sp, 0    // memory pointer
+addi a1, zero, 4  // register index
+
+// LOOP:
+lw a0, 0(a4)
+jalr x1, 0x1A0(gp)
+addi a1, a1, 1
+addi a4, a4, 4
+bne a1, a3, FF0  // LOOP
+
+jalr x1, 1D0(gp)
+addi sp, sp, 0x70
+```
+
 
 
 #### Finishing code for these tests: (???-???)
@@ -59,12 +97,12 @@ jalr x1, 20(gp)
 jalr x1, 70(gp)
 ```
 
-#### Test `put, store, store, validate`:
+#### Test `put, store, store, validate` (800020A0-???):
 ```assembly
 
 ```
 
-#### Test sanity demi-function complete validation:
+#### Test sanity demi-function complete validation (???-???):
 ```assembly
 
 ```
