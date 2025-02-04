@@ -79,7 +79,15 @@ jalr x1, 1D0(gp)
 addi sp, sp, 0x70
 ```
 
+#### Test `put, store, store, validate` (800020A0-???):
+```assembly
 
+```
+
+#### Test sanity demi-function complete validation (???-???):
+```assembly
+
+```
 
 #### Finishing code for these tests: (???-???)
 ```assembly
@@ -96,17 +104,6 @@ addi a0, gp, 0x834
 jalr x1, 20(gp)
 jalr x1, 70(gp)
 ```
-
-#### Test `put, store, store, validate` (800020A0-???):
-```assembly
-
-```
-
-#### Test sanity demi-function complete validation (???-???):
-```assembly
-
-```
-
 
 
 # Regular Funtions Tests
