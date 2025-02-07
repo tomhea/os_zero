@@ -13,6 +13,7 @@ Notes:
 - The address ranges are "where are the test in memory", in hex, and they here won't include the last byte.
 - The binary tests have a "First code" section reserved for them, meaning addresses 80002000-80004000.
 - There is a code that prints wether all test passed, and it's located in `80002040`.
+- I added some nops between tests so that there will be at least one nop between tests, and that each test will bw aligned to 0x10.
 
 # Testing-Functions Tests:
 
@@ -37,7 +38,7 @@ jalr x1, 1A0(gp)
 jalr x1, 1E0(gp)
 ```
 
-#### Test sanity `store_all_regs` and `put_regs_test_values`: (80002030-80002068)
+#### Test sanity `store_all_regs` and `put_regs_test_values`: (80002040-80002078)
 ```assembly
 jalr x1, 1B0(gp)
 jalr x1, 1C0(gp)
@@ -58,7 +59,7 @@ jalr x1, 1D0(gp)
 addi sp, sp, 0x70
 ```
 
-#### Test failure `store_all_regs` and `put_regs_test_values`: (800020A0)
+#### Test failure `store_all_regs` and `put_regs_test_values`: (80002080-800020B8)
 ```assembly
 jalr x1, 1B0(gp)
 addi s1, zero, 1
@@ -79,9 +80,16 @@ jalr x1, 1D0(gp)
 addi sp, sp, 0x70
 ```
 
-#### Test `put, store, store, validate` (800020A0-???):
+#### Test `put, store, store, validate` (800020C0-800020E0):
 ```assembly
-
+jalr x1, 0x1B0(gp)
+jalr x1, 0x1C0(gp)
+nop
+nop
+jalr x1, 0x1C0(gp)
+nop
+nop
+jalr x1, 0x1F0(gp)
 ```
 
 #### Test sanity demi-function complete validation (???-???):

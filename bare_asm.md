@@ -347,7 +347,7 @@ jalr x1, 0x20(gp)
 srli a5, a5, 1
 addi a3, a3, 1
 addi a1, a1, 4
-bne a1, a2, LOOP (-0x78, F88)
+bne a1, a2, LOOP (-0x84, F7C)
 
 addi sp, sp, 0xE0
 jalr x0, 0(a4)
