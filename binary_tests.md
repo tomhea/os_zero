@@ -92,7 +92,7 @@ jalr x1, 0x1C0(gp)
 jalr x1, 0x1C0(gp)
 // Filled2[immidiate] {
     lui a0, UPPER
-    addi a0, LOW
+    addi a0, a0, LOW
 }
 jalr x1, 0x1F0(gp)
 // Filled3[Success/Failure]: jalr x1, 0x1D0(gp) / jalr x1, 0x1E0(gp)
@@ -179,17 +179,27 @@ jalr x1, 0x1C0(gp)
 jalr x1, 0x1F0(gp)
 jalr x1, 0x1C0(gp)
 lui a0, 0xFFFC0
-addi a0, 0x3F0
+addi a0, a0, 0x3F0
 jalr x1, 0x1F0(gp)
 jalr x1, 0x1D0(gp)
 ```
 
-#### Test sanity demi-function complete validation (???-???):
+#### Test sanity demi-function complete validation (80002250-8000227C):
 ```assembly
-
+jalr x1, 0x1B0(gp)
+jalr x1, 0x1C0(gp)
+addi a0, zero, 0x123
+jalr x1, 0x1C0(gp)
+addi a1, zero, 0x123
+addi a2, zero, 0
+jalr x1, 0x1A0(gp)
+lui a0, 0x00000
+addi a0, a0, 0xBF0
+jalr x1, 0x1F0(gp)
+jalr x1, 0x1D0(gp)  // Real implementations won't need it, as 
 ```
 
-#### Finishing code for these tests: (???-???)
+#### Finishing code for these tests: (80002280-800022A8)
 ```assembly
 lw x1, FE0(gp)
 sw x1, FE8(gp)

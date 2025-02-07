@@ -185,7 +185,11 @@ My goal now is to write a documented First code that tests all 4 testing functio
 
 I completed testing the `assert_ret`, and the `put+store` combination, for both sanity and failure, with the new atomic functions!
 
+I completed implementing the `validate_all_regs_unchanged`, and testing it, with 8 different tests!
+I also decided and modified `put_regs_test_values` to store `s1=1` for my ease of not setting it again every time I call sys1D0 or sys1E0.
 
+Now all of my testing functions are implemented, documented and tested. 
+The other sysXXX functions aren't tested, but I still stop for a second to celebrate, and call the current os: The `tested_test_funcsos`.
 
 #### Globals / Syscalls added:
 - `assert_test_success() -> None` - `sys1D0` JUMPER (modifies a0, relies on `s1==1`).
@@ -193,7 +197,7 @@ I completed testing the `assert_ret`, and the `put+store` combination, for both 
 - `assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
 - `put_regs_test_values() -> None` - `sys1B0` JUMPER (modifies all regs).
 - `store_all_regs() -> None` - `sys1C0` JUMPER (keep all regs except sp).
-- `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
+- `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER (modifies the a-regs, and sp).
 - `testing_mask` - `g_FEC`
 - `tests_success` - `g_FE8`
 - `test_print_on_failure` - `g_FE4`

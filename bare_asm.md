@@ -292,7 +292,7 @@ sw s1, FE8(gp)
 jalr x0, 0(x1)
 ```
 
-`validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER_41C0 (modifies the a registers, and sp).
+`validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER_41C0 (modifies the a-registers, and sp).
 ```assembly
 // This function compares RegsAfter and RegsBefore, and only compares according to regs_mask (if the Nth bit is on, then compares xN with its Before&After values). Print if compared a register and it was changed.
 // RegsAfter (x4-x31) are at the latest 0x70 bytes of stack, and RegsBefore (x4-x31) are at the next 0x70 bytes of the stack.
@@ -373,8 +373,3 @@ Notes:
 - `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
 - `test_print_on_failure` - `g_FE4` - if true (1), the testing functions doesn't print on test failures, just update the `tests_success` boolean.
 - `testing_tests_success` - `g_FE0` - if true (1), the testing of the testing functions was successful (0 otherwise).
-- `manual_test` values:
-   - `g_FD0` - Tested equals to 0x123 in assert_ret.
-   - `g_FD4` - Tested wasn't changed from 0xC in put_regs_test_values + store_all_regs.
-   - `g_FD8` - Tested equeals 0xE in Store Store Validate test.
-   - `g_FDC` - Tested equals to 0x17 in the Demi-FullTest.
