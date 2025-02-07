@@ -170,6 +170,20 @@ Filled2 = 00000|030.
 Filled3 = Failure.
 ```
 
+#### Test validation don't modify non-a regs (80002220-80002248):
+```assembly
+jalr x1, 0x1B0(gp)
+jalr x1, 0x1C0(gp)
+jalr x1, 0x1C0(gp)
+jalr x1, 0x1C0(gp)
+jalr x1, 0x1F0(gp)
+jalr x1, 0x1C0(gp)
+lui a0, 0xFFFC0
+addi a0, 0x3F0
+jalr x1, 0x1F0(gp)
+jalr x1, 0x1D0(gp)
+```
+
 #### Test sanity demi-function complete validation (???-???):
 ```assembly
 
