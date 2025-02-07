@@ -191,8 +191,8 @@ I completed testing the `assert_ret`, and the `put+store` combination, for both 
 - `assert_test_success() -> None` - `sys1D0` JUMPER (modifies a0, relies on `s1==1`).
 - `assert_test_failure() -> None` - `sys1E0` JUMPER (modifies a0, relies on `s1==1`).
 - `assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER (keep all regs).
-- `put_regs_test_values() -> None` - `sys1B0` JUMPER (modifies all regs) (**IMPLEMENTED, NOT CHECKED**).
-- `store_all_regs() -> None` - `sys1C0` JUMPER (keep all regs except sp) (**IMPLEMENTED, NOT CHECKED**).
+- `put_regs_test_values() -> None` - `sys1B0` JUMPER (modifies all regs).
+- `store_all_regs() -> None` - `sys1C0` JUMPER (keep all regs except sp).
 - `validate_all_regs_unchanged(regs_mask: a0) -> None` - `sysUPDATE` (keep all regs except sp) (**NOT IMPLEMENTED**).
 - `testing_mask` - `g_FEC`
 - `tests_success` - `g_FE8`

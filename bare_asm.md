@@ -292,6 +292,67 @@ sw s1, FE8(gp)
 jalr x0, 0(x1)
 ```
 
+`validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER_41C0 (modifies the a registers, and sp, relies on `s1==1`).
+```assembly
+// This function compares RegsAfter and RegsBefore, and only compares according to regs_mask (if the Nth bit is on, then compares xN with its Before&After values). Print if compared a register and it was changed.
+// RegsAfter (x4-x31) are at the latest 0x70 bytes of stack, and RegsBefore (x4-x31) are at the next 0x70 bytes of the stack.
+// This function is responsible to increment sp such that both RegsBefore and RegsAfter will be removed.
+
+addi a1, sp, 0      // current_reg in RegsAfter (+0x70 will get to current RegBefore)
+addi a2, sp, 0x70   // End of RegsAfter
+addi a3, zero, 4    // index of current register (used for printing)
+lw a4, FFC(sp)   // store x1
+srli a5, a0, 4   // shifted flags
+
+//LOOP:
+andi a6, a0, 1
+beq a6, zero, NextIter (+0x74)
+lw a7, 0(a1)
+lw a6, 0x70(a1)
+beq a6, a7, NextIter (+0x68)
+
+sw zero, FE8(gp)
+lw x1, FE4(gp)
+beq x1, zero, NextIter (+0x5C)
+
+addi a0, gp, 0x800
+jalr x1, 0x20(gp)
+
+addi a0, gp, 0x8B8
+jalr x1, 0x20(gp)
+addi a0, a3, 0
+jalr x1, 0x130(gp)
+addi a0, gp, 0x8C4
+jalr x1, 0x20(gp)
+
+addi a0, gp, 0x810
+jalr x1, 0x20(gp)
+addi a0, a4, 0
+jalr x1, 0x130(gp)
+
+addi a0, gp, 0x818
+jalr x1, 0x20(gp)
+addi a0, a6, 0
+jalr x1, 0x130(gp)
+
+addi a0, gp, 0x828
+jalr x1, 0x20(gp)
+addi a0, a7, 0
+jalr x1, 0x130(gp)
+
+addi a0, gp, 0x834
+jalr x1, 0x20(gp)
+
+//NextIter:
+srli a5, a5, 1
+addi a3, a3, 1
+addi a1, a1, 4
+bne a1, a2, LOOP (-0x78, F88)
+
+addi sp, sp, 0xE0
+jalr x0, 0(a4)
+```
+
 
 Notes:
 1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.
