@@ -239,9 +239,9 @@ addi sp, sp, 0x8
 jalr x0, 0(x1)
 ```
 
-`put_regs_test_values() -> None` - `sys1B0` JUMPER_4080 (modifies all regs) (Implemented, NOT CHECKT)
+`put_regs_test_values() -> None` - `sys1B0` JUMPER_4080 (modifies all regs)
 ```assembly
-// Loads the immediate N for each register xN (for N>=4, N<=31).
+// Loads the immediate N for each register xN (for N>=4, N<=31), but s1==1.
 addi x4, zero, 4
 addi x5, zero, 5
 ...
@@ -292,7 +292,7 @@ sw s1, FE8(gp)
 jalr x0, 0(x1)
 ```
 
-`validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER_41C0 (modifies the a registers, and sp, relies on `s1==1`).
+`validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER_41C0 (modifies the a registers, and sp).
 ```assembly
 // This function compares RegsAfter and RegsBefore, and only compares according to regs_mask (if the Nth bit is on, then compares xN with its Before&After values). Print if compared a register and it was changed.
 // RegsAfter (x4-x31) are at the latest 0x70 bytes of stack, and RegsBefore (x4-x31) are at the next 0x70 bytes of the stack.

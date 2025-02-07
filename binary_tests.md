@@ -38,7 +38,7 @@ jalr x1, 1A0(gp)
 jalr x1, 1E0(gp)
 ```
 
-#### Test sanity `store_all_regs` and `put_regs_test_values`: (80002040-80002078)
+#### Test sanity `store_all_regs` and `put_regs_test_values`: (80002040-80002080)
 ```assembly
 jalr x1, 1B0(gp)
 jalr x1, 1C0(gp)
@@ -46,50 +46,128 @@ addi a3, zero, 0x20
 addi a2, zero, 0
 addi a4, sp, 0    // memory pointer
 addi a1, zero, 4  // register index
+addi a5, zero, 9
 
 // LOOP:
 lw a0, 0(a4)
+bne a1, a5, 8
+addi a0, a0, 8  // make it 9 from 1
 jalr x1, 0x1A0(gp)
 addi a1, a1, 1
 addi a4, a4, 4
-bne a1, a3, FF0  // LOOP
+bne a1, a3, FE8
 
-addi s1, zero, 1
 jalr x1, 1D0(gp)
 addi sp, sp, 0x70
 ```
 
-#### Test failure `store_all_regs` and `put_regs_test_values`: (80002080-800020B8)
+#### Test failure `store_all_regs` and `put_regs_test_values`: (80002090-800020D4)
 ```assembly
 jalr x1, 1B0(gp)
-addi s1, zero, 1
-jalr x1, 1C0(gp)
 addi a3, zero, 0x20
+jalr x1, 1C0(gp)
 addi a2, zero, 0
 addi a4, sp, 0    // memory pointer
 addi a1, zero, 4  // register index
+addi a5, zero, 9
 
 // LOOP:
 lw a0, 0(a4)
+bne a1, a5, 8
+addi a0, a0, 8  // make it 9 from 1
 jalr x1, 0x1A0(gp)
 addi a1, a1, 1
 addi a4, a4, 4
-bne a1, a3, FF0  // LOOP
+bne a1, a3, FE8
 
 jalr x1, 1D0(gp)
 addi sp, sp, 0x70
 ```
 
-#### Test `put, store, store, validate` (800020C0-800020E0):
+#### TestTemplate "PSSV": `put, store, store, validate`:
 ```assembly
 jalr x1, 0x1B0(gp)
 jalr x1, 0x1C0(gp)
-nop
-nop
+// Filled1[opcodes]
 jalr x1, 0x1C0(gp)
-nop
-nop
+// Filled2[immidiate] {
+    lui a0, UPPER
+    addi a0, LOW
+}
 jalr x1, 0x1F0(gp)
+// Filled3[Success/Failure]: jalr x1, 0x1D0(gp) / jalr x1, 0x1E0(gp)
+```
+
+#### Test PSSV sanity nothing changed (800020E0-800020FC):
+```assembly
+// Implements TestTemplate "PSSV".
+Filled1 = {
+    // Empty
+}
+Filled2 = FFFFF|FF0.
+Filled3 = Success.
+```
+
+#### Test PSSV success mask_off_first (80002100-80002120):
+```assembly
+// Implements TestTemplate "PSSV".
+Filled1 = {
+    addi x4, zero, 0x123
+}
+Filled2 = FFFFF|FE0.
+Filled3 = Success.
+```
+
+#### Test PSSV success mask_off_last (80002130-80002150):
+```assembly
+// Implements TestTemplate "PSSV".
+Filled1 = {
+    addi x31, zero, 0x123
+}
+Filled2 = 7FFFF|FF0.
+Filled3 = Success.
+```
+
+#### Test PSSV failure mask_on_first (80002160-80002180):
+```assembly
+// Implements TestTemplate "PSSV".
+Filled1 = {
+    addi x4, zero, 0x123
+}
+Filled2 = 00000|010.
+Filled3 = Failure.
+```
+
+#### Test PSSV failure mask_on_last (80002190-800021B0):
+```assembly
+// Implements TestTemplate "PSSV".
+Filled1 = {
+    addi x31, zero, 0x123
+}
+Filled2 = 80000|000.
+Filled3 = Failure.
+```
+
+#### Test PSSV success mask_off_twice (800021C0-800021E0):
+```assembly
+// Implements TestTemplate "PSSV".
+Filled1 = {
+    addi x4, zero, 0x123
+    addi x5, zero, 0x124
+}
+Filled2 = 00000|FC0.
+Filled3 = Success.
+```
+
+#### Test PSSV failure mask_on_twice (800021F0-80002210):
+```assembly
+// Implements TestTemplate "PSSV".
+Filled1 = {
+    addi x4, zero, 0x123
+    addi x5, zero, 0x124
+}
+Filled2 = 00000|030.
+Filled3 = Failure.
 ```
 
 #### Test sanity demi-function complete validation (???-???):
