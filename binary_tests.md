@@ -295,18 +295,40 @@ lui x1, 0x80010  // TODO replace with "After input tests fnished" address.
 jalr x0, 0(x1)
 ```
 
-#### Test `availc` false: (800025A0-???) - NOT IMPLEMENTED, NOT PROGRAMMED.
+#### Test `availc` false: (800025A0-800025C8)
 ```assembly
-
+jalr x1, 1B0(gp)
+jalr x1, 1C0(gp)
+jalr x1, A0(gp)
+jalr x1, 1C0(gp)
+addi a1, zero, 0
+addi a2, zero, 0
+jalr x1, 1A0(gp)
+lui a0, 0x00000
+addi a0, a0, 0xBF0  // all but a0
+jalr x1, 1F0(gp)
 ```
 
-#### Test `availc` true: (???-???) - NOT IMPLEMENTED, NOT PROGRAMMED.
+#### Test `availc` true: (800025D0-80002608)
 ```assembly
+lui t0, 0x10000
+lb t1, 5(t0)
+andi t1, t1, 0x1
+beq t1, x0, -8    // wait until there input available
 
+jalr x1, 1B0(gp)
+jalr x1, 1C0(gp)
+jalr x1, A0(gp)
+jalr x1, 1C0(gp)
+addi a1, zero, 1
+addi a2, zero, 0
+jalr x1, 1A0(gp)
+lui a0, 0x00000
+addi a0, a0, 0xBF0  // all but a0
+jalr x1, 1F0(gp)
 ```
 
-
-#### Test `putc` actual char: (???-???) - NOT IMPLEMENTED, NOT PROGRAMMED.
+#### Test `putc` actual char: (???-???) - NOT IMPLEMENTED, NOT PROGRAMMED
 ```assembly
 jalr x1, 1B0(gp)
 addi a0, zero, 0x62
