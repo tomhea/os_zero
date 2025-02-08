@@ -15,6 +15,7 @@ Notes:
     - The Testing-Functions tests are in 80002000-80002400, and the sysX tests are at 80002400-80004000.
 - There is a code that prints wether all test passed, and it's located in `80002040`.
 - I added some nops between tests so that there will be at least one nop between tests, and that each test will bw aligned to 0x10.
+- The (v0)(v1), and the TemplateFunc, are to allow me to specify very similar functions, without duplicating the documentation here.
 
 # Testing-Functions Tests (80002000-80002400):
 
@@ -91,7 +92,7 @@ jalr x1, 0x1B0(gp)
 jalr x1, 0x1C0(gp)
 // Filled1[opcodes]
 jalr x1, 0x1C0(gp)
-// Filled2[immidiate] {
+// Filled2[immidiate] {  // Note that on the case that LOW&0x800 is on, it decrements. I decided that for reading-simplicitly - I'll ignore that (meaning that you'll need to specify FFFFF|FFF for 0xFFFFFFFF, and I'll do the actual calculation and get to UPPER=00000,LOW=FFF in the encoding phase).
     lui a0, UPPER
     addi a0, a0, LOW
 }
@@ -211,7 +212,9 @@ jalr x0, 0x400(x1)
 
 
 
-# Regular Funtions Tests (80002400-80004000)
+# Regular SYS Funtions Tests (80002400-80004000)
+
+These tests can be skipped if bit0 in `testing_mask` is off.
 
 #### Prep for these tests: (80002400-80002414)
 ```assembly
@@ -223,6 +226,10 @@ jalr x0, 0(x1)
 ```
 
 ### Output tests (80002420-80002580)
+
+These tests (beside avoid "TEST FAIL" print) should print "bog ABCF0129".
+
+These tests can be skipped if bit9 in `testing_mask` is off.
 
 #### Prep for these tests: (80002420-80002434)
 ```assembly
@@ -284,15 +291,21 @@ addi a0, a0, 0xFF0  // all
 jalr x1, 1F0(gp)
 ```
 
-### Input tests (80002580-???)
+### Input tests (80002580-80002780)
+
+These tests (beside avoid "TEST FAIL" print):
+- Expect the next input "code\n" + "maxlen", and wait about 0.1s to start the first input.
+- Prints "de\n" + "maxlen".
+
+These tests can be skipped if bit10 in `testing_mask` is off.
 
 #### Prep for these tests: (80002580-80002594)
 ```assembly
 lw a0, 0xFEC(gp)
 andi a0, a0, 0x400  // input tests flag
 bne a0, zero, 12
-lui x1, 0x80010  // TODO replace with "After input tests fnished" address.
-jalr x0, 0(x1)
+lui x1, 0x80002
+jalr x0, 0x780(x1)
 ```
 
 #### Test `availc` false: (800025A0-800025C8)
@@ -345,8 +358,8 @@ addi a0, a0, 0xB90  // all but t0,t1,a0
 jalr x1, 1F0(gp)
 ```
 
-#### Test `gets` stop at newline: (80002670-???)  (v0) - NOT IMPLEMENTED
-#### Test `gets` stop at max-len: (80002???-???)  (v1) - NOT IMPLEMENTED
+#### Test `gets` stop at newline: (80002670-800026E4)  (v0)
+#### Test `gets` stop at max-len: (800026F0-80002764)  (v1)
 ```assembly
 // gp+0xFD0 is out buffer, and gp+0xFC0 is out expected result. FCC(gp) is fixed BBBB bytes.
 lw a0, FCC(gp)
@@ -365,28 +378,28 @@ lui a0, 0x00000
 addi a0, a0, 0xFF0  // all
 jalr x1, 1F0(gp)
 
-addi a2, gp, 0
+addi a2, gp, 0x8DC
 (v0) addi a3, gp, FC0
 (v1) addi a3, gp, FB0
 addi a4, gp, FD0
 
-lw a0, 0(a3)
-lw a1, 0(a4)
+lw a0, 0(a4)
+lw a1, 0(a3)
 jalr x1, 1A0(gp)
-lw a0, 4(a3)
-lw a1, 4(a4)
+lw a0, 4(a4)
+lw a1, 4(a3)
 jalr x1, 1A0(gp)
-lw a0, 8(a3)
-lw a1, 8(a4)
+lw a0, 8(a4)
+lw a1, 8(a3)
 jalr x1, 1A0(gp)
-lw a0, C(a3)
-lw a1, C(a4)
+lw a0, C(a4)
+lw a1, C(a3)
 jalr x1, 1A0(gp)
 ```
 
 
 
-### Finishing code for the sys tests: (???-???)
+### Finishing code for the sys tests: (80002780-80002788)
 ```assembly
 lui x1, 0x80010
 jalr x0, 0(x1)

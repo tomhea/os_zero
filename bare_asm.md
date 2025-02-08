@@ -9,8 +9,9 @@ In this notebook you could find the TEXTUAL ASSEMBLY (WOW) that I personally enc
 - Boot code: At `80000000`.
 - Fast syscalls: `80001000:80001800`, so that's `gp:gp+800`. `putc` is at `gp+0`. I'll use the shortcut sysX for `gp+X`, so `putc` is `sys0`.
 - Global data: `80000800:80001000`, so `gp-800:gp`. I'll use the shortcut `g_X` for `gp-1000+X`.
-- First code: At `80002000`.
-- syscalls implementations: `80004000:80010000`. Some functions in the `Fast syscalls` sections are "jumpers" into this section.
+- First code: At `80002000` (Used for sys-funcs tests). When finished jumps to "Assembler code".
+- Syscalls implementations: `80004000:80010000`. Some functions in the `Fast syscalls` sections are "jumpers" into this section.
+- Assembler code: At `80010000` and onwards.
 - Stack: `FFFFFFF8` and downwords.
 
 Notes:
@@ -113,7 +114,7 @@ andi a0, a0, 0x1
 ret
 ```
 
-`gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **CHECKED, NOT TESTED**.
+`gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs)
 ```assembly
 // Reads at most max_len-1 bytes from input, and writes them as a string to the given buffer.
 // Also stops at a newline. Ends the string with a null-char (and removes the ending newline).
@@ -378,3 +379,7 @@ Notes:
 - `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
 - `test_print_on_failure` - `g_FE4` - if flase (0), the testing functions doesn't print on test failures, just update the `tests_success` boolean (and on 1 they both print & update).
 - `testing_tests_success` - `g_FE0` - if true (1), the testing of the testing functions was successful (0 otherwise).
+- `gets_tests_buffers` - g_FB0 (0x30 bytes).
+    - `g_FB0` (0x10 bytes) - expected buffer for gets() max-len test.
+    - `g_FC0` (0x10 bytes) - expected buffer for gets() newline test.
+    - `g_FD0` (0x10 bytes) - working buffer for both gets() tests.

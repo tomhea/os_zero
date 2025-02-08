@@ -139,7 +139,7 @@ I implemented the hex print, and it works perfectly.
 
 
 
-## Part 4 - testos (**CURRENT**)
+## Part 4 - testos
 
 I think that before going further, I must have some testing support, and "testing routine". Thus - `testos`.
 
@@ -193,7 +193,14 @@ The other sysXXX functions aren't tested, but I still stop for a second to celeb
 
 I continue with jumping to 0x80002400, the start of the sys tests. I decided that when this part ends, it will jump to 0x80010000, the start of the actual code to run (the assembler).
 
-I implemented the output tests!
+I implemented the output tests, and the input tests!
+
+All of my binary functions are now fully tested (except the three ATOMIC functions).
+Also, Each piece of binary-encoded assembly is documented in the `bare_asm.md` or `binary_tests.md` notebook.
+
+This part was the longest to implement yet. I'm so glad to declare:
+
+`testos` is done!
 
 #### Globals / Syscalls added:
 - `assert_test_success() -> None` - `sys1D0` JUMPER (modifies a0, relies on `s1==1`).
@@ -208,11 +215,9 @@ I implemented the output tests!
 - `testing_tests_success` - `g_FE0`.
 - `gets_tests_buffers` - g_FB0 (0x30 bytes).
 
-#### TODOs:
-- Replace the two opcodes in 8000258C-80002594 with jumping to the end of the input tests, not the end of sys tests.
 
 
-## Part 5 - allocos (**NEXT**)
+## Part 5 - allocos (**CURRENT**)
 
 `allocos` is dynamic **alloc**ation **os**.
 
