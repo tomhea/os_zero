@@ -87,13 +87,13 @@ addi sp, sp, 0x14
 ret
 ```
 
-`exit() -> NO_RETURN` - `sys70` (infinite loop).
+`exit() -> NO_RETURN` - `sys70` (infinite loop) (**ATOMIC**).
 ```assembly
 // Self loop.
 beq zero, zero, 0
 ```
 
-`getc() -> char_a0` - `sys80` (uses `t0,t1`).
+`getc() -> char_a0` - `sys80` (uses `t0,t1`) - **CHECKED, NOT TESTED**.
 ```assembly
 // Get a char from stdin (blocking).
 lui t0, 0x10000
@@ -113,7 +113,7 @@ andi a0, a0, 0x1
 ret
 ```
 
-`gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs).
+`gets(out_s: pointer_a0, max_len: a1) -> None` - `sysB0` (keep all regs) - **CHECKED, NOT TESTED**.
 ```assembly
 // Reads at most max_len-1 bytes from input, and writes them as a string to the given buffer.
 // Also stops at a newline. Ends the string with a null-char (and removes the ending newline).

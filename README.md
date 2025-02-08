@@ -193,7 +193,7 @@ The other sysXXX functions aren't tested, but I still stop for a second to celeb
 
 I continue with jumping to 0x80002400, the start of the sys tests. I decided that when this part ends, it will jump to 0x80010000, the start of the actual code to run (the assembler).
 
-
+I implemented the output tests!
 
 #### Globals / Syscalls added:
 - `assert_test_success() -> None` - `sys1D0` JUMPER (modifies a0, relies on `s1==1`).
@@ -208,7 +208,7 @@ I continue with jumping to 0x80002400, the start of the sys tests. I decided tha
 - `testing_tests_success` - `g_FE0`.
 
 #### TODOs:
-- Replace the two opcodes in 8000242C-80002434 with jumping to the end of the printings tests, not the end of sys tests.
+- Replace the two opcodes in 8000258C-80002594 with jumping to the end of the input tests, not the end of sys tests.
 
 
 ## Part 5 - allocos (**NEXT**)

@@ -213,25 +213,24 @@ jalr x0, 0x400(x1)
 
 # Regular Funtions Tests (80002400-80004000)
 
-#### Prep for these tests: (80002400-80002440)
+#### Prep for these tests: (80002400-80002414)
 ```assembly
 lw a0, 0xFEC(gp)
 andi a0, a0, 1      // sys-tests flag
 bne a0, zero, 12
 lui x1, 0x80010000
 jalr x0, 0(x1)
-nop
-nop
-nop
+```
 
+### Output tests (80002420-80002580)
+
+#### Prep for these tests: (80002420-80002434)
+```assembly
 lw a0, 0xFEC(gp)
 andi a0, a0, 0x200  // output tests flag
 bne a0, zero, 12
-lui x1, 0x80010000  // TODO change to jump to after printing trests finished.
-jalr x0, 0(x1)
-nop
-nop
-nop
+lui x1, 0x80002
+jalr x0, 0x580(x1)
 ```
 
 #### Test `putc` actual char: (80002440-80002460)
@@ -242,7 +241,7 @@ jalr x1, 1C0(gp)
 jalr x1, 0(gp)
 jalr x1, 1C0(gp)
 lui a0, 0x00000
-addi a0, 0xF90  // all but t0,t1
+addi a0, a0, 0xF90  // all but t0,t1
 jalr x1, 1F0(gp)
 ```
 
@@ -254,20 +253,80 @@ jalr x1, 1C0(gp)
 jalr x1, 0(gp)
 jalr x1, 1C0(gp)
 lui a0, 0x00000
-addi a0, 0xF90  // all but t0,t1
+addi a0, a0, 0xF90  // all but t0,t1
+jalr x1, 1F0(gp)
+```
+
+#### Test `puts` actual string: (800024A0-800024C0) (v0)
+#### Test `puts` empty string: (800024D0-800024F0)  (v1)
+```assembly
+jalr x1, 1B0(gp)
+(v0) addi a0, gp, 0x8D4
+(v1) addi a0, gp, 0x8D8
+jalr x1, 1C0(gp)
+jalr x1, 20(gp)
+jalr x1, 1C0(gp)
+lui a0, 0x00000
+addi a0, a0, 0xFF0  // all
+jalr x1, 1F0(gp)
+```
+
+#### Test `putx` sanity: (80002500-80002524)
+```assembly
+jalr x1, 1B0(gp)
+lui a0, 0xABCF0
+addi a0, a0, 0x129
+jalr x1, 1C0(gp)
+jalr x1, 130(gp)
+jalr x1, 1C0(gp)
+lui a0, 0x00000
+addi a0, a0, 0xFF0  // all
+jalr x1, 1F0(gp)
+```
+
+### Input tests (80002580-???)
+
+#### Prep for these tests: (80002580-80002594)
+```assembly
+lw a0, 0xFEC(gp)
+andi a0, a0, 0x400  // input tests flag
+bne a0, zero, 12
+lui x1, 0x80010  // TODO replace with "After input tests fnished" address.
+jalr x0, 0(x1)
+```
+
+#### Test `availc` false: (800025A0-???) - NOT IMPLEMENTED, NOT PROGRAMMED.
+```assembly
+
+```
+
+#### Test `availc` true: (???-???) - NOT IMPLEMENTED, NOT PROGRAMMED.
+```assembly
+
+```
+
+
+#### Test `putc` actual char: (???-???) - NOT IMPLEMENTED, NOT PROGRAMMED.
+```assembly
+jalr x1, 1B0(gp)
+addi a0, zero, 0x62
+jalr x1, 1C0(gp)
+jalr x1, 0(gp)
+jalr x1, 1C0(gp)
+lui a0, 0x00000
+addi a0, a0, 0xF90  // all but t0,t1
 jalr x1, 1F0(gp)
 ```
 
 
 
-
-#### Finishing code for these tests: (???-???)
+### Finishing code for the sys tests: (???-???)
 ```assembly
 lui x1, 0x80010
 jalr x0, 0(x1)
 ```
 
-#### Main starting code: (80010000-8001001C)
+### Main starting code: (80010000-8001001C)
 ```assembly
 // Print `tests_success` and exit.
 addi a0, gp, 0x840
