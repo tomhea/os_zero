@@ -191,6 +191,10 @@ I also decided and modified `put_regs_test_values` to store `s1=1` for my ease o
 Now all of my testing functions are implemented, documented and tested. 
 The other sysXXX functions aren't tested, but I still stop for a second to celebrate, and call the current os: The `tested_test_funcsos`.
 
+I continue with jumping to 0x80002400, the start of the sys tests. I decided that when this part ends, it will jump to 0x80010000, the start of the actual code to run (the assembler).
+
+
+
 #### Globals / Syscalls added:
 - `assert_test_success() -> None` - `sys1D0` JUMPER (modifies a0, relies on `s1==1`).
 - `assert_test_failure() -> None` - `sys1E0` JUMPER (modifies a0, relies on `s1==1`).
@@ -202,6 +206,9 @@ The other sysXXX functions aren't tested, but I still stop for a second to celeb
 - `tests_success` - `g_FE8`
 - `test_print_on_failure` - `g_FE4`
 - `testing_tests_success` - `g_FE0`.
+
+#### TODOs:
+- Replace the two opcodes in 8000242C-80002434 with jumping to the end of the printings tests, not the end of sys tests.
 
 
 ## Part 5 - allocos (**NEXT**)

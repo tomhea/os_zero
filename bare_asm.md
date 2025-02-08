@@ -366,10 +366,15 @@ Notes:
 - `boot_a1` - `g_FF8` - holds the initial a1, the device tree.
 - `boot_a2` - `g_FFC` - holds the initial a2, the `struct fw_dynamic_info`.
 - `multicore_boot_address - `g_FF0` - holds the address that the non-0 harts will jump to on an interrupt.
-- `testing_mask` - `g_FEC` - holds the "which tests to run" flags. 0xFFFFFFFF means to run all tests.
+- `testing_mask` - `g_FEC` - holds the "which tests to run" flags. 0x7FF means to run all tests.
     - bit `0` - Run the `sys` test suite.
-    - bit `30` - Run tests that output things.
-    - bit `31` - Run tests that require specific input.
+    - bit `1` - Run the binary assembler full tests.
+    - bit `2` - Run the assembly assembler full tests.
+    - bit `3` - Run the assembly compiler tests.
+    - bit `4` - Run the C compiler tests.
+    - bits `5-8` - Reserved.
+    - bit `9` - Run tests that output things.
+    - bit `10` - Run tests that require specific input.
 - `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
 - `test_print_on_failure` - `g_FE4` - if flase (0), the testing functions doesn't print on test failures, just update the `tests_success` boolean (and on 1 they both print & update).
 - `testing_tests_success` - `g_FE0` - if true (1), the testing of the testing functions was successful (0 otherwise).

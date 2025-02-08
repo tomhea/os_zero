@@ -210,10 +210,64 @@ jalr x0, 0x400(x1)
 ```
 
 
+
 # Regular Funtions Tests (80002400-80004000)
 
+#### Prep for these tests: (80002400-80002440)
+```assembly
+lw a0, 0xFEC(gp)
+andi a0, a0, 1      // sys-tests flag
+bne a0, zero, 12
+lui x1, 0x80010000
+jalr x0, 0(x1)
+nop
+nop
+nop
 
-#### Finishing code for these tests: (80002280-800022A8)
+lw a0, 0xFEC(gp)
+andi a0, a0, 0x200  // output tests flag
+bne a0, zero, 12
+lui x1, 0x80010000  // TODO change to jump to after printing trests finished.
+jalr x0, 0(x1)
+nop
+nop
+nop
+```
+
+#### Test `putc` actual char: (80002440-80002460)
+```assembly
+jalr x1, 1B0(gp)
+addi a0, zero, 0x62
+jalr x1, 1C0(gp)
+jalr x1, 0(gp)
+jalr x1, 1C0(gp)
+lui a0, 0x00000
+addi a0, 0xF90  // all but t0,t1
+jalr x1, 1F0(gp)
+```
+
+#### Test `putc` null byte: (80002470-80002490)
+```assembly
+jalr x1, 1B0(gp)
+addi a0, zero, 0x0
+jalr x1, 1C0(gp)
+jalr x1, 0(gp)
+jalr x1, 1C0(gp)
+lui a0, 0x00000
+addi a0, 0xF90  // all but t0,t1
+jalr x1, 1F0(gp)
+```
+
+
+
+
+#### Finishing code for these tests: (???-???)
+```assembly
+lui x1, 0x80010
+jalr x0, 0(x1)
+```
+
+#### Main starting code: (80010000-8001001C)
 ```assembly
 // Print `tests_success` and exit.
 addi a0, gp, 0x840
