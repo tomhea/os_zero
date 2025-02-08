@@ -345,6 +345,45 @@ addi a0, a0, 0xB90  // all but t0,t1,a0
 jalr x1, 1F0(gp)
 ```
 
+#### Test `gets` stop at newline: (80002670-???)  (v0) - NOT IMPLEMENTED
+#### Test `gets` stop at max-len: (80002???-???)  (v1) - NOT IMPLEMENTED
+```assembly
+// gp+0xFD0 is out buffer, and gp+0xFC0 is out expected result. FCC(gp) is fixed BBBB bytes.
+lw a0, FCC(gp)
+sw a0, FD0(gp)
+sw a0, FD4(gp)
+sw a0, FD8(gp)
+sw a0, FDC(gp)
+
+jalr x1, 1B0(gp)
+addi a0, gp, 0xFD0
+addi a1, zero, 7
+jalr x1, 1C0(gp)
+jalr x1, B0(gp)
+jalr x1, 1C0(gp)
+lui a0, 0x00000
+addi a0, a0, 0xFF0  // all
+jalr x1, 1F0(gp)
+
+addi a2, gp, 0
+(v0) addi a3, gp, FC0
+(v1) addi a3, gp, FB0
+addi a4, gp, FD0
+
+lw a0, 0(a3)
+lw a1, 0(a4)
+jalr x1, 1A0(gp)
+lw a0, 4(a3)
+lw a1, 4(a4)
+jalr x1, 1A0(gp)
+lw a0, 8(a3)
+lw a1, 8(a4)
+jalr x1, 1A0(gp)
+lw a0, C(a3)
+lw a1, C(a4)
+jalr x1, 1A0(gp)
+```
+
 
 
 ### Finishing code for the sys tests: (???-???)

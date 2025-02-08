@@ -206,6 +206,7 @@ I implemented the output tests!
 - `tests_success` - `g_FE8`
 - `test_print_on_failure` - `g_FE4`
 - `testing_tests_success` - `g_FE0`.
+- `gets_tests_buffers` - g_FB0 (0x30 bytes).
 
 #### TODOs:
 - Replace the two opcodes in 8000258C-80002594 with jumping to the end of the input tests, not the end of sys tests.
