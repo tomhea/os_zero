@@ -12,10 +12,11 @@ The `test_print_on_failure` global will initially be set to false, until, and wh
 Notes:
 - The address ranges are "where are the test in memory", in hex, and they here won't include the last byte.
 - The binary tests have a "First code" section reserved for them, meaning addresses 80002000-80004000.
+    - The Testing-Functions tests are in 80002000-80002400, and the sysX tests are at 80002400-80004000.
 - There is a code that prints wether all test passed, and it's located in `80002040`.
 - I added some nops between tests so that there will be at least one nop between tests, and that each test will bw aligned to 0x10.
 
-# Testing-Functions Tests:
+# Testing-Functions Tests (80002000-80002400):
 
 #### Prep for these tests: (80002000-80002010)
 ```assembly
@@ -199,12 +200,21 @@ jalr x1, 0x1F0(gp)
 jalr x1, 0x1D0(gp)  // Real implementations won't need it, as 
 ```
 
-#### Finishing code for these tests: (80002280-800022A8)
+#### Finishing code for these tests: (80002280-80002294)
 ```assembly
 lw x1, FE0(gp)
 sw x1, FE8(gp)
 sw s1, FE4(gp)
+lui x1, 0x80002
+jalr x0, 0x400(x1)
+```
 
+
+# Regular Funtions Tests (80002400-80004000)
+
+
+#### Finishing code for these tests: (80002280-800022A8)
+```assembly
 // Print `tests_success` and exit.
 addi a0, gp, 0x840
 jalr x1, 20(gp)
@@ -214,8 +224,3 @@ addi a0, gp, 0x834
 jalr x1, 20(gp)
 jalr x1, 70(gp)
 ```
-
-
-# Regular Funtions Tests
-
-

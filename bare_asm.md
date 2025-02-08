@@ -371,5 +371,5 @@ Notes:
     - bit `30` - Run tests that output things.
     - bit `31` - Run tests that require specific input.
 - `tests_success` - `g_FE8` - initialized with 1, and any test failure set it to 0.
-- `test_print_on_failure` - `g_FE4` - if true (1), the testing functions doesn't print on test failures, just update the `tests_success` boolean.
+- `test_print_on_failure` - `g_FE4` - if flase (0), the testing functions doesn't print on test failures, just update the `tests_success` boolean (and on 1 they both print & update).
 - `testing_tests_success` - `g_FE0` - if true (1), the testing of the testing functions was successful (0 otherwise).
