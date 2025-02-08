@@ -93,7 +93,7 @@ ret
 beq zero, zero, 0
 ```
 
-`getc() -> char_a0` - `sys80` (uses `t0,t1`) - **CHECKED, NOT TESTED**.
+`getc() -> char_a0` - `sys80` (uses `t0,t1`)
 ```assembly
 // Get a char from stdin (blocking).
 lui t0, 0x10000
@@ -104,7 +104,7 @@ lbu a0, 0(t0)
 ret
 ```
 
-`availc() -> bool_a0` - `sysA0` (keep all regs) - **NOT CHECKED**.
+`availc() -> bool_a0` - `sysA0` (keep all regs)
 ```assembly
 // Checks if there is an input byte ready to be read.
 lui a0, 0x10000

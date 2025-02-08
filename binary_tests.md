@@ -257,8 +257,8 @@ addi a0, a0, 0xF90  // all but t0,t1
 jalr x1, 1F0(gp)
 ```
 
-#### Test `puts` actual string: (800024A0-800024C0) (v0)
-#### Test `puts` empty string: (800024D0-800024F0)  (v1)
+#### Test `puts` actual string: (800024A0-800024C0)  (v0)
+#### Test `puts` empty string:  (800024D0-800024F0)  (v1)
 ```assembly
 jalr x1, 1B0(gp)
 (v0) addi a0, gp, 0x8D4
@@ -328,15 +328,20 @@ addi a0, a0, 0xBF0  // all but a0
 jalr x1, 1F0(gp)
 ```
 
-#### Test `putc` actual char: (???-???) - NOT IMPLEMENTED, NOT PROGRAMMED
+#### Test `getc` char-ready:    (80002610-80002638)  (v0)
+#### Test `getc` wait-for-char: (80002640-80002668)  (v1)
 ```assembly
+// Assumes v1 happens right after v0, which happens right after Test-availc-true.
 jalr x1, 1B0(gp)
-addi a0, zero, 0x62
 jalr x1, 1C0(gp)
-jalr x1, 0(gp)
+jalr x1, 80(gp)
 jalr x1, 1C0(gp)
+(v0) addi a1, zero, 0x63
+(v1) addi a1, zero, 0x6F
+addi a2, zero, 0
+jalr x1, 1A0(gp)
 lui a0, 0x00000
-addi a0, a0, 0xF90  // all but t0,t1
+addi a0, a0, 0xB90  // all but t0,t1,a0
 jalr x1, 1F0(gp)
 ```
 
