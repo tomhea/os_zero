@@ -213,7 +213,7 @@ This part was the longest to implement yet. I'm so glad to declare:
 - `tests_success` - `g_FE8`
 - `test_print_on_failure` - `g_FE4`
 - `testing_tests_success` - `g_FE0`.
-- `gets_tests_buffers` - g_FB0 (0x30 bytes).
+- `gets_tests_buffers` - `g_FB0` (0x30 bytes).
 
 
 
@@ -223,6 +223,16 @@ This part was the longest to implement yet. I'm so glad to declare:
 
 In this os I'm gonna implement a very simple dynamic allocation functionality: `brk`, `sbrk`. Of course, they'll be tested.
 The allocation will have a specific memory chunk to allocate from it: 0x81000000 -> 0x81FFFFFF.
+This dynamic heap will be called binary_heap, as it's in the binary section (as I'm still coding in binary).
+
+
+
+#### Globals / Syscalls added:
+- `brk() -> None` - `sys200` JUMPER.
+- `sbrk() -> None` - `sys210` JUMPER.
+- `binary_heap_segment_end` - `g_FAC`.
+- `binary_heap_segment_start` - `g_FA8`.
+- `binary_heap_top` - `g_FA4` - Initialized with "segment_start", and represent the first unallocated byte in the binary_heap.
 
 
 

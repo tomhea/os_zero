@@ -354,6 +354,48 @@ addi sp, sp, 0xE0
 jalr x0, 0(a4)
 ```
 
+`brk(pointer: a0) -> a0` - `sys200` JUMPER_4270 (keep all regs) **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Sets binary_heap_top to a0, return 0 on success, or -1 on failure (argument not inside the binary-heap segment).
+addi sp, sp, -0x8
+sw x11, 0x0(sp)
+
+lw a1, FA8(gp)
+bgeu a0, a1, 0xC
+addi a0, zero, 0xFFF
+beq zero, zero, 0x14
+
+lw a1, FAC(gp)
+bgeu a0, a1, -0xC
+
+sw a0, FA4(gp)
+addi a0, zero, 0
+
+lw x11, 0x0(sp)
+lw x1, 0x4(sp)
+addi sp, sp, 0x8
+ret
+```
+
+`sbrk(incr: a0) -> pointer_a0` - `sys210` JUMPER??? (keep all regs) **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Increments binary_heap_top by a0, and return the previous top on success, or -1 on failure (if next top won't reside inside the binary-heap segment).
+addi sp, sp, -0x8
+sw x11, 0x0(sp)
+
+addi a1, a0, 0
+lw a0, FA4(gp)
+add a0, a0, a1
+
+jalr x1, 200(gp)
+bne a0, zero, 8
+addi a0, a1, 0
+
+lw x11, 0x0(sp)
+lw x1, 0x4(sp)
+addi sp, sp, 0x8
+ret
+```
 
 Notes:
 1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.
@@ -383,3 +425,6 @@ Notes:
     - `g_FB0` (0x10 bytes) - expected buffer for gets() max-len test.
     - `g_FC0` (0x10 bytes) - expected buffer for gets() newline test.
     - `g_FD0` (0x10 bytes) - working buffer for both gets() tests.
+- `binary_heap_segment_end` - `g_FAC` - Constant 0x82000000.
+- `binary_heap_segment_start` - `g_FA8` - Constant 0x81000000.
+- `binary_heap_top` - `g_FA4` - Initialized with "segment_start", and represent the first unallocated byte in the binary_heap.
