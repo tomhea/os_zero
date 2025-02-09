@@ -225,6 +225,14 @@ In this os I'm gonna implement a very simple dynamic allocation functionality: `
 The allocation will have a specific memory chunk to allocate from it: 0x81000000 -> 0x81FFFFFF.
 This dynamic heap will be called binary_heap, as it's in the binary section (as I'm still coding in binary).
 
+To test these functions I'll use some test data. 
+I see that if I'll keep using the globals spot for tests data, I might finish it very fast.
+So I need another spot that's reserved just for that:
+- I'll reserve the 8000E800-8000F800 page just for big test-data (buffers, parametrized arrays, etc.).
+- I'll reserve 0x400 stack frame ready to use by any test, without having to mess with modifying sp.
+
+I coded `brk`, and designed my first "parametrized" test, the `brk` test (described in the `binary_tests.md` notebook).
+
 
 
 #### Globals / Syscalls added:

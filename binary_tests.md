@@ -16,6 +16,7 @@ Notes:
 - There is a code that prints wether all test passed, and it's located in `80002040`.
 - I added some nops between tests so that there will be at least one nop between tests, and that each test will bw aligned to 0x10.
 - The (v0)(v1), and the TemplateFunc, are to allow me to specify very similar functions, without duplicating the documentation here.
+- All the tests have a generic 0x100 bytes stack frame already allocated for them (so they can use `0(sp)` up to `0x3FF(sp)`).
 
 # Testing-Functions Tests (80002000-80002400):
 
@@ -23,8 +24,8 @@ Notes:
 ```assembly
 addi s1, zero, 1
 sw zero, FE4(gp)
+addi sp, sp, 0xC00  // Reserve 0x400 bytes generic stack frame for all tests.
 nop  // OP 13000000
-nop
 ```
 
 #### Test `assert_ret`: (80002010-80002030)
@@ -395,6 +396,69 @@ jalr x1, 1A0(gp)
 lw a0, C(a4)
 lw a1, C(a3)
 jalr x1, 1A0(gp)
+```
+
+
+#### Test `brk` fail : (80002770-80002???) - **NOT IMPLEMENTED**.
+
+Parametrized (8000E800-8000E880):
+- `v0` - fail 1-out-of-bounds
+- `v1` - fail 1-below-bounds
+- `v2` - fail above-bounds
+- `v3` - fail below-bounds
+- `v4` - success middle address
+- `v5` - success same address
+- `v6` - success max address
+- `v7` - success min address
+
+Parametrization struct:
+```C
+u32 test_name_str;
+u32 argument;
+u32 expected_result;
+u32 expected_new_heap_top;
+```
+
+Test:
+```assembly
+// Note that all these tests happen on top==start.
+lw a0, FA8(gp)
+sw a0, FA4(gp)
+
+lui a0, 0x8000F
+addi a0, a0, 0x800
+sw a0, 0(sp)      // current param pointer
+addi a0, a0, 0x80
+sw a0, 4(sp)      // params end
+
+// TEST_CASE_START:
+jalr x1, 1B0(gp)
+lw a0, 0(sp)
+lw a0, 4(a0)
+jalr x1, 1C0(gp)
+jalr x1, 200(gp)
+jalr x1, 1C0(gp)
+
+lw s0, 0(sp)
+lw a1, 8(s0)
+lw a2, 0(s0)
+jalr x1, 1A0(gp)
+
+lw a0, FA4(gp)
+lw a1, C(s0)
+jalr x1, 1A0(gp)
+
+lui a0, 0x00000
+addi a0, a0, 0xBF0  // all but a0
+jalr x1, 1F0(gp)
+
+addi s0, s0, 0x10
+sw s0, 0(sp)
+lw a0, 4(sp)
+blt s0, a0, TEST_CASE_START
+
+lw a0, FA8(gp)
+sw a0, FA4(gp)
 ```
 
 

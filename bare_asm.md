@@ -354,26 +354,21 @@ addi sp, sp, 0xE0
 jalr x0, 0(a4)
 ```
 
-`brk(pointer: a0) -> a0` - `sys200` JUMPER_4270 (keep all regs) **NOT IMPLEMENTED, NOT TESTED**.
+`brk(pointer: a0) -> a0` - `sys200` JUMPER_4270 (keep all regs) **NOT TESTED**.
 ```assembly
 // Sets binary_heap_top to a0, return 0 on success, or -1 on failure (argument not inside the binary-heap segment).
-addi sp, sp, -0x8
-sw x11, 0x0(sp)
-
-lw a1, FA8(gp)
-bgeu a0, a1, 0xC
+lw x1, FA8(gp)
+bgeu a0, x1, 0xC
 addi a0, zero, 0xFFF
 beq zero, zero, 0x14
 
-lw a1, FAC(gp)
-bgeu a0, a1, -0xC
+lw x1, FAC(gp)
+bgeu a0, x1, -0xC
 
 sw a0, FA4(gp)
 addi a0, zero, 0
 
-lw x11, 0x0(sp)
-lw x1, 0x4(sp)
-addi sp, sp, 0x8
+lw x1, 0xFFC(sp)
 ret
 ```
 
@@ -383,8 +378,7 @@ ret
 addi sp, sp, -0x8
 sw x11, 0x0(sp)
 
-addi a1, a0, 0
-lw a0, FA4(gp)
+lw a1, FA4(gp)
 add a0, a0, a1
 
 jalr x1, 200(gp)
