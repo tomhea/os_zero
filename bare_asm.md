@@ -391,6 +391,60 @@ addi sp, sp, 0x8
 ret
 ```
 
+`strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Compares Lexicographically the first n bytes of str1 and str2. 
+// Returns negative if str1 is before str2, zero if they are the same, and positive is str1 is after str2.
+
+```
+
+`DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Expects a 0x400 bytes buffer, and initializes it as a new dictionary.
+addi x1, a0, 0x3FC
+
+sw zero, 0(x1)
+addi x1, x1, FFC
+bgeu x1, a0, FF8
+
+lw x1, FFC(sp)
+ret
+```
+
+`DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER - Calculate the key - **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Returns the hash of the given string.
+// Hash algorithm: sum (modulo 256) of hashes of chars, which is: (str[i] ^ (0x53*i)). 
+addi sp, sp, FEC
+sw t0, 0x0(sp)
+sw t1, 0x4(sp)
+sw t2, 0x8(sp)
+sw a1, 0xC(sp)
+
+addi t0, zero, 0x53  // The MAGIC
+add a1, a0, a1       // str_end
+addi t1, zero, 0     // current result
+
+beq a0, a1, END ???
+//LOOP:
+lbu t2, 0(a0)
+xor t2, t2, t0
+addi t1, t1, t2
+addi t0, t0, 0x53    // The MAGIC
+addi a0, a0, 1
+bltu a0, a1, LOOP ???
+
+//END:
+andi a0, t1, 0xFF
+lw t0, 0x0(sp)
+lw t1, 0x4(sp)
+lw t2, 0x8(sp)
+lw a1, 0xC(sp)
+lw x1, 0x10(sp)
+addi sp, sp, 0x14
+ret
+```
+
 Notes:
 1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.
    - JUMPER_XXXX means that the implementation is stored at 0x8000XXXX.

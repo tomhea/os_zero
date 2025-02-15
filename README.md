@@ -257,7 +257,16 @@ After that, implementing `sbrk` was easy, and for its parametrized tests I basic
 In this operation system I'm going to implement a dictionary data structure (256-bins hashmap) using hand-coded assembly, Thus - `dictos`.
 It will be very helpful for writing an assembler in the future version, `asos`.
 The dictionary will only have "Init, Get, Insert", and no delete. 
-For it's dynamic nature, it could use the `sbrk()` as node allocations for the bins.
+For it's dynamic nature, it could use the `sbrk()` as node allocations for the bins. When we finish with the dict, we can "free" the memory with `brk(before_dict)`, assuming no other allocations.
+
+#### Globals / Syscalls added:
+- `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER - Calculate the key - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER - Returns pointer to the found node or NULL if not found - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER - a0 same as `DICT_get_by_bin`, a1 the bin address - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> None` - `sys270` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+
 
 
 
