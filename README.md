@@ -217,7 +217,7 @@ This part was the longest to implement yet. I'm so glad to declare:
 
 
 
-## Part 5 - allocos (**CURRENT**)
+## Part 5 - allocos
 
 `allocos` is dynamic **alloc**ation **os**.
 
@@ -235,21 +235,24 @@ I coded `brk` and manually tested the function.
 I designed my first "parametrized" test, the `brk` test (described in the `binary_tests.md` notebook).
 After a few pushbacks, it works as a charm! I'll call this half-version, of `brk` implemented and tested - `brkos`.
 
+After that, implementing `sbrk` was easy, and for its parametrized tests I basically copy pasted the "brk parametrized test" and just modified the parameters. That's awesome.
+
+`allocos` is done!
+
+#### Globals / Syscalls added:
+- `brk() -> None` - `sys200` JUMPER.
+- `sbrk() -> None` - `sys210` JUMPER.
+- `binary_heap_segment_end` - `g_FAC`.
+- `binary_heap_segment_start` - `g_FA8`.
+- `binary_heap_top` - `g_FA4` - Initialized with "segment_start", and represent the first unallocated byte in the binary_heap.
+
 #### Fallbacks/Bugs:
 - I `btl` instead of `bltu`.
 - Gave `assert_ret` `a2-param` the first-word of a string, instead of the pointer to the string.
 
 
-#### Globals / Syscalls added:
-- `brk() -> None` - `sys200` JUMPER.
-- `sbrk() -> None` - `sys210` JUMPER **NOT IMPLEMENTED**.
-- `binary_heap_segment_end` - `g_FAC`.
-- `binary_heap_segment_start` - `g_FA8`.
-- `binary_heap_top` - `g_FA4` - Initialized with "segment_start", and represent the first unallocated byte in the binary_heap.
 
-
-
-## Part 6 - dictos (**NEXT**)
+## Part 6 - dictos (**CURRENT**)
 
 In this operation system I'm going to implement a dictionary data structure (256-bins hashmap) using hand-coded assembly, Thus - `dictos`.
 It will be very helpful for writing an assembler in the future version, `asos`.

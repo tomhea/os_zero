@@ -399,7 +399,7 @@ jalr x1, 1A0(gp)
 ```
 
 
-#### Test `brk` fail : (80002770-800027E0) - **NOT IMPLEMENTED**.
+#### Test `brk`: (80002770-800027E0)
 
 Parametrized (8000E800-8000E880):
 - `v0` - fail 1-out-of-bounds
@@ -421,7 +421,7 @@ u32 expected_new_heap_top;
 
 Test:
 ```assembly
-// Note that all these tests happen on top==start.
+// Note that this test suite starts with top==start.
 lw a0, FA8(gp)
 sw a0, FA4(gp)
 
@@ -437,6 +437,74 @@ lw a0, 0(sp)
 lw a0, 4(a0)
 jalr x1, 1C0(gp)
 jalr x1, 200(gp)
+jalr x1, 1C0(gp)
+
+lw s0, 0xE0(sp)
+lw a1, 8(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+lw a0, FA4(gp)
+lw a1, C(s0)
+jalr x1, 1A0(gp)
+
+addi a0, zero, 0xBF0  // all but a0
+jalr x1, 1F0(gp)
+
+addi s0, s0, 0x10
+sw s0, 0(sp)
+lw a0, 4(sp)
+bltu s0, a0, TEST_CASE_START (-0x48)
+
+lw a0, FA8(gp)
+sw a0, FA4(gp)
+```
+
+
+#### Test `sbrk`: (800027F0-80002860)
+
+Parametrized (8000E8A0-8000E960):
+- `v0` - fail 1-below-bounds on initial address
+- `v1` - fail 1-out-of-bounds on initial address
+- `v2` - fail below-bounds on initial address
+- `v3` - fail above-bounds on initial address
+
+- `v4` - success incr=0 on initial address
+- `v5` - success incr=0x10 on initial address
+- `v6` - success incr=0x10 on middle address
+- `v7` - success incr=0 on middle address (after +)
+- `v8` - success incr=-0x8 on middle address
+- `v9` - success incr=0 on middle address (after -)
+
+- `vA` - fail below-bounds on middle address
+- `vB` - fail after-bounds on middle address
+
+Parametrization struct:
+```C
+u32 test_name_str;
+u32 argument;
+u32 expected_result;
+u32 expected_new_heap_top;
+```
+
+Test:
+```assembly
+// Note that these tests rely on their order.
+lw a0, FA8(gp)
+sw a0, FA4(gp)
+
+lui a0, 0x8000F
+addi a0, a0, 0x8A0
+sw a0, 0(sp)      // current param pointer
+addi a0, a0, 0x80
+sw a0, 4(sp)      // params end
+
+// TEST_CASE_START:
+jalr x1, 1B0(gp)
+lw a0, 0(sp)
+lw a0, 4(a0)
+jalr x1, 1C0(gp)
+jalr x1, 210(gp)
 jalr x1, 1C0(gp)
 
 lw s0, 0xE0(sp)

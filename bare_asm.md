@@ -51,7 +51,7 @@ jalr zero, 0(t0)
 ## Syscalls:
 All the implemented syscalls, in order:
 
-`putc(c: char_a0) -> None` - `sys0` (uses `t0,t1`, keeps `a0`).
+`putc(c: char_a0) -> None` - `sys0` (uses `t0,t1`, keeps `a0`)
 ```assembly
 // Prints the given byte.
 lui t0, 0x10000
@@ -62,7 +62,7 @@ sb a0, 0(t0)
 ret
 ```
 
-`puts(s: pointer_a0) -> None` - `sys20` (keep all regs).
+`puts(s: pointer_a0) -> None` - `sys20` (keep all regs)
 ```assembly
 // Prints a string.
 addi sp, sp, -0x14
@@ -88,7 +88,7 @@ addi sp, sp, 0x14
 ret
 ```
 
-`exit() -> NO_RETURN` - `sys70` (infinite loop) (**ATOMIC**).
+`exit() -> NO_RETURN` - `sys70` (infinite loop) (**ATOMIC**)
 ```assembly
 // Self loop.
 beq zero, zero, 0
@@ -158,7 +158,7 @@ addi sp, sp, 0x18
 ret
 ```
 
-`putx(hex: a0) -> None` - `sys130` (keep all regs).
+`putx(hex: a0) -> None` - `sys130` (keep all regs)
 ```assembly
 // This function prints a0 as an 8-digit hexadecimal number (first char is the most-significant hex digit).
 addi sp, sp, -0x1C
@@ -195,7 +195,7 @@ addi sp, sp, 0x1C
 ret
 ```
 
-`assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER_4000 (keep all regs).
+`assert_ret(ret_val: a0, expected: a1, string_testname: a2) -> None` - `sys1A0` JUMPER_4000 (keep all regs)
 ```assembly
 // This function checks if a0 equals a1, and if not - prints this test failure (a0, a1, x1 values, and a2 message if not null).
 // If test_print_on_failure global is off - Don't print anything (also ignore a2), just update the tests_success global if needed.
@@ -263,7 +263,7 @@ sw x31, 0x6C
 jalr x0, 0(x1)
 ```
 
-`assert_test_success() -> None` - `sys1D0` JUMPER_4180 (modifies a0, relies on `s1==1`) (**ATOMIC**).
+`assert_test_success() -> None` - `sys1D0` JUMPER_4180 (modifies a0, relies on `s1==1`) (**ATOMIC**)
 ```assembly
 // Prints error if global `tests_success` in off, and anyway sets it on again.
 lw x1, FFC(x2)
@@ -278,7 +278,7 @@ jalr x0, 0x20(gp)
 jalr x0, 0(x1)
 ```
 
-`assert_test_failure() -> None` - `sys1E0` JUMPER_41A0 (modifies a0, relies on `s1==1`) (**ATOMIC**).
+`assert_test_failure() -> None` - `sys1E0` JUMPER_41A0 (modifies a0, relies on `s1==1`) (**ATOMIC**)
 ```assembly
 // Prints error if global `tests_success` in on, and anyway sets it on again.
 lw x1, FFC(x2)
@@ -293,7 +293,7 @@ sw s1, FE8(gp)
 jalr x0, 0(x1)
 ```
 
-`validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER_41C0 (modifies the a-registers, and sp).
+`validate_all_regs_unchanged(regs_mask: a0) -> None` - `sys1F0` JUMPER_41C0 (modifies the a-registers, and sp)
 ```assembly
 // This function compares RegsAfter and RegsBefore, and only compares according to regs_mask (if the Nth bit is on, then compares xN with its Before&After values). Print if compared a register and it was changed.
 // RegsAfter (x4-x31) are at the latest 0x70 bytes of stack, and RegsBefore (x4-x31) are at the next 0x70 bytes of the stack.
@@ -354,7 +354,7 @@ addi sp, sp, 0xE0
 jalr x0, 0(a4)
 ```
 
-`brk(pointer: a0) -> a0` - `sys200` JUMPER_4270 (keep all regs).
+`brk(pointer: a0) -> a0` - `sys200` JUMPER_4270 (keep all regs)
 ```assembly
 // Sets binary_heap_top to a0, return 0 on success, or -1 on failure (argument not inside the binary-heap segment).
 lw x1, FA8(gp)
@@ -372,7 +372,7 @@ lw x1, 0xFFC(sp)
 ret
 ```
 
-`sbrk(incr: a0) -> pointer_a0` - `sys210` JUMPER_43F0 (keep all regs) **NOT IMPLEMENTED, NOT TESTED**.
+`sbrk(incr: a0) -> pointer_a0` - `sys210` JUMPER_42A0 (keep all regs)
 ```assembly
 // Increments binary_heap_top by a0, and return the previous top on success, or -1 on failure (if next top won't reside inside the binary-heap segment).
 addi sp, sp, -0x8
