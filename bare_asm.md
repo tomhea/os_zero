@@ -354,7 +354,7 @@ addi sp, sp, 0xE0
 jalr x0, 0(a4)
 ```
 
-`brk(pointer: a0) -> a0` - `sys200` JUMPER_4270 (keep all regs) **NOT TESTED**.
+`brk(pointer: a0) -> a0` - `sys200` JUMPER_4270 (keep all regs).
 ```assembly
 // Sets binary_heap_top to a0, return 0 on success, or -1 on failure (argument not inside the binary-heap segment).
 lw x1, FA8(gp)
@@ -372,7 +372,7 @@ lw x1, 0xFFC(sp)
 ret
 ```
 
-`sbrk(incr: a0) -> pointer_a0` - `sys210` JUMPER??? (keep all regs) **NOT IMPLEMENTED, NOT TESTED**.
+`sbrk(incr: a0) -> pointer_a0` - `sys210` JUMPER_43F0 (keep all regs) **NOT IMPLEMENTED, NOT TESTED**.
 ```assembly
 // Increments binary_heap_top by a0, and return the previous top on success, or -1 on failure (if next top won't reside inside the binary-heap segment).
 addi sp, sp, -0x8

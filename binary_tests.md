@@ -399,7 +399,7 @@ jalr x1, 1A0(gp)
 ```
 
 
-#### Test `brk` fail : (80002770-80002???) - **NOT IMPLEMENTED**.
+#### Test `brk` fail : (80002770-800027E0) - **NOT IMPLEMENTED**.
 
 Parametrized (8000E800-8000E880):
 - `v0` - fail 1-out-of-bounds
@@ -439,23 +439,22 @@ jalr x1, 1C0(gp)
 jalr x1, 200(gp)
 jalr x1, 1C0(gp)
 
-lw s0, 0(sp)
+lw s0, 0xE0(sp)
 lw a1, 8(s0)
-lw a2, 0(s0)
+addi a2, s0, 0
 jalr x1, 1A0(gp)
 
 lw a0, FA4(gp)
 lw a1, C(s0)
 jalr x1, 1A0(gp)
 
-lui a0, 0x00000
-addi a0, a0, 0xBF0  // all but a0
+addi a0, zero, 0xBF0  // all but a0
 jalr x1, 1F0(gp)
 
 addi s0, s0, 0x10
 sw s0, 0(sp)
 lw a0, 4(sp)
-blt s0, a0, TEST_CASE_START
+bltu s0, a0, TEST_CASE_START (-0x48)
 
 lw a0, FA8(gp)
 sw a0, FA4(gp)

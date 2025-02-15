@@ -231,13 +231,18 @@ So I need another spot that's reserved just for that:
 - I'll reserve the 8000E800-8000F800 page just for big test-data (buffers, parametrized arrays, etc.).
 - I'll reserve 0x400 stack frame ready to use by any test, without having to mess with modifying sp.
 
-I coded `brk`, and designed my first "parametrized" test, the `brk` test (described in the `binary_tests.md` notebook).
+I coded `brk` and manually tested the function.
+I designed my first "parametrized" test, the `brk` test (described in the `binary_tests.md` notebook).
+After a few pushbacks, it works as a charm! I'll call this half-version, of `brk` implemented and tested - `brkos`.
 
+#### Fallbacks/Bugs:
+- I `btl` instead of `bltu`.
+- Gave `assert_ret` `a2-param` the first-word of a string, instead of the pointer to the string.
 
 
 #### Globals / Syscalls added:
 - `brk() -> None` - `sys200` JUMPER.
-- `sbrk() -> None` - `sys210` JUMPER.
+- `sbrk() -> None` - `sys210` JUMPER **NOT IMPLEMENTED**.
 - `binary_heap_segment_end` - `g_FAC`.
 - `binary_heap_segment_start` - `g_FA8`.
 - `binary_heap_top` - `g_FA4` - Initialized with "segment_start", and represent the first unallocated byte in the binary_heap.
