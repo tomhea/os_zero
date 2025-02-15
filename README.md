@@ -96,7 +96,7 @@ It allows us to control when to "release" the other threads, and what code they 
 
 This version will be able to get input. echos will get string as input and will echo it.
 
-I decided that I need to be more organized, and that I'll allow myself writing multiple "notebooks" (yeah, I'm addressing markdowns as "Notebooks").
+I decided that I need to be more organized, and that I'll allow myself writing multiple "notebooks" (yeah, I'm addressing these ".md" files as "Notebooks").
 I created the [bare_asm.md](bare_asm.md) for the actual assembly I coded in memory, and the memory regions.
 
 I implemented `getc` that inputs a byte, and `availc` that returns wether an input is available to be read.
@@ -168,7 +168,7 @@ First code is now:
 - 80002010-8000203C: Check `put_regs_test_values, store_all_regs`.
 - 8000203C-80002058: Print the `tests_success` boolean, and finish.
 
-I'll have to have some kind of documentation + order of the "First code" section, as now the data their might get lost. 
+I'll have to have some kind of documentation + order of the "First code" section, as now the data there might get lost. 
 I want this `testos` to also define exactly how the "First code" shouls look like.
 
 My first idea is to have it "First code" to lie in addresses 80002000-80004000, and it will be responsible for setting up the tests and running them, and afterwords to jump to the assembler code in 0x80010000.
