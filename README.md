@@ -270,9 +270,23 @@ For it's dynamic nature, it could use the `sbrk()` as node allocations for the b
 
 
 
-## Part 7 - asos (**NEXT**)
+## Part 7 - skeleton_asos (**NEXT**)
+
+`asos` is **as**sembly **os** (see next os version). This version will implement the skeleton for the assembler.
+
+This version will setup all the code functions, and a parsing mechanism that sends assembly-text-line into the correct handler, but the actual handlers will just "write" some 4-byte ascii message related to the op (with the last byte being \n for easy reading. Maybe the 3 bytes will be the "return address to the `sys_XXX` function. Maybe "oB7\n" for sys_B70).
+
+The handlers will have a `sys_XXX` address (40-50 funcs), but they'll just each call the "unimplemented handler" (another `sys_YYY`) with the correct op string parameter.
+
+Each of the assembler mechanism, functions, will be unit-tested.
+
+
+
+## Part 8 - asos (**NEXT**)
 
 `asos` is **as**sembly **os**.
 
 This version will be an actual assembler, written byte by byte, to assemble a piece of memory as text, into assembly binary, and execute it.
 It will allow me to continue much more easily after it's done, and very tested.
+
+In this step we will implement each of the `sys_XXX` handlers from the previous part.
