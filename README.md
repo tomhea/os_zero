@@ -259,6 +259,8 @@ It will be very helpful for writing an assembler in the future version, `asos`.
 The dictionary will only have "Init, Get, Insert", and no delete. 
 For it's dynamic nature, it could use the `sbrk()` as node allocations for the bins. When we finish with the dict, we can "free" the memory with `brk(before_dict)`, assuming no other allocations.
 
+I decided to create the `asm_cheatsheet.md` notebook, for writing common encodings. I hope that it won't make more bugs, but instead save time and bugs.
+
 #### Globals / Syscalls added:
 - `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
 - `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
