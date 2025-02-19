@@ -261,6 +261,8 @@ For it's dynamic nature, it could use the `sbrk()` as node allocations for the b
 
 I decided to create the `asm_cheatsheet.md` notebook, for writing common encodings. I hope that it won't make more bugs, but instead save time and bugs.
 
+I implemented `strncmp`, write a test to it, and luckily it fails on `v6`. I'm not sure why yet, and I think it's the test's fault, but I'll understand it next.
+
 #### Globals / Syscalls added:
 - `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
 - `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.

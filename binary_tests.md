@@ -399,7 +399,7 @@ jalr x1, 1A0(gp)
 ```
 
 
-#### Test `brk`: (80002770-800027E0)
+#### Test `brk`: (80002780-800027F0)
 
 Parametrized (8000E800-8000E880):
 - `v0` - fail 1-out-of-bounds
@@ -461,7 +461,7 @@ sw a0, FA4(gp)
 ```
 
 
-#### Test `sbrk`: (800027F0-80002860)
+#### Test `sbrk`: (80002800-80002870)
 
 Parametrized (8000E8A0-8000E960):
 - `v0` - fail 1-below-bounds on initial address
@@ -496,7 +496,7 @@ sw a0, FA4(gp)
 lui a0, 0x8000F
 addi a0, a0, 0x8A0
 sw a0, 0(sp)      // current param pointer
-addi a0, a0, 0x80
+addi a0, a0, 0xC0
 sw a0, 4(sp)      // params end
 
 // TEST_CASE_START:
@@ -529,8 +529,67 @@ sw a0, FA4(gp)
 ```
 
 
+#### Test `strncmp`: (80002880-800028E0)
 
-### Finishing code for the sys tests: (80002780-80002788)
+Parametrized (8000E980-8000EAA0):
+- `v0` - same strings, n < length
+- `v1` - same strings, n == length
+- `v2` - same strings, n > length
+
+- `v3` - same length, string lexi-smaller, big n.
+- `v4` - same length, string lexi-bigger, big n.
+- `v5` - same length, string lexi-bigger, n is the first different index.
+- `v6` - same length, string lexi-bigger, n is the 1 before the first different index.
+
+- `v7` - different string from the first char, n==1.
+- `v8` - different string from the first char, n==0.
+- `v9` - the second is a prefix of the first, big n.
+
+Parametrization struct:
+```C
+u32 test_name_str;
+u32 length_argument;
+u32 expected_result;
+char[8] string1;
+char[8] string2;
+```
+
+Test:
+```assembly
+lui a0, 0x8000F
+addi a0, a0, 0x980
+sw a0, 0(sp)      // current param pointer
+addi a0, a0, 0x140
+sw a0, 4(sp)      // params end
+
+// TEST_CASE_START:
+jalr x1, 1B0(gp)
+lw a0, 0(sp)
+lw a2, 4(a0)
+addi a1, a0, 0x14
+nop
+addi a0, a0, 0xC
+jalr x1, 1C0(gp)
+jalr x1, 220(gp)
+jalr x1, 1C0(gp)
+
+lw s0, 0xE0(sp)
+lw a1, 8(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+addi a0, zero, 0xBF0  // all but a0
+jalr x1, 1F0(gp)
+
+addi s0, s0, 0x20
+sw s0, 0(sp)
+lw a0, 4(sp)
+bltu s0, a0, TEST_CASE_START (-0x48)
+```
+
+
+
+### Finishing code for the sys tests: (80002900-80002908)
 ```assembly
 lui x1, 0x80010
 jalr x0, 0(x1)

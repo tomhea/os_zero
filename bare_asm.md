@@ -391,10 +391,11 @@ addi sp, sp, 0x8
 ret
 ```
 
-`strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER_42D0 - **HALF IMPLEMENTED, NOT TESTED**.
+`strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER_42D0 - **HALF TESTED**.
 ```assembly
 // Compares Lexicographically the first n bytes of str1 and str2. 
 // Returns negative if str1 is before str2, zero if they are the same, and positive is str1 is after str2.
+// Stops on '\0'.
 addi sp, sp, FEC
 sw t0, 0x0(sp)
 sw t1, 0x4(sp)
@@ -402,15 +403,18 @@ sw a1, 0x8(sp)
 sw a2, 0xC(sp)
 
 add a2, a0, a2
+addi t1, zero, 1
+addi t0, zero, 0  // length 0 should succeed
 
 //LOOP:
+beq t1, zero, END (+0x20)
 beq a0, a2, END (+0x1C)
-lw t0, 0(a0)
-lw t1, 0(a1)
+lb t0, 0(a0)
+lb t1, 0(a1)
 sub t0, t0, t1
 addi a0, a0, 1
 addi a1, a1, 1
-beq t0, zero, LOOP (-0x18)
+beq t0, zero, LOOP (-0x1C)
 
 //END:
 addi a0, t0, 0
