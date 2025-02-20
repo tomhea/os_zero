@@ -261,16 +261,20 @@ For it's dynamic nature, it could use the `sbrk()` as node allocations for the b
 
 I decided to create the `asm_cheatsheet.md` notebook, for writing common encodings. I hope that it won't make more bugs, but instead save time and bugs.
 
-I implemented `strncmp`, write a test to it, and luckily it fails on `v6`. I'm not sure why yet, and I think it's the test's fault, but I'll understand it next.
+I implemented `strncmp`, write a test to it, and luckily it fails on `v6`. I'm not sure why yet, and I think it's the test's fault. 
+It was indeed the tests fault! As I encoded the parameters in big endien.. Anyway, It's good that I both write the test AND gives it a call from "main" at the same time (from address 80010000), so that I could test it withput the test's implementation.
 
 #### Globals / Syscalls added:
-- `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+- `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER.
 - `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
 - `DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER - Calculate the key - **NOT IMPLEMENTED, NOT TESTED**.
 - `DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER - Returns pointer to the found node or NULL if not found - **NOT IMPLEMENTED, NOT TESTED**.
 - `DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER - a0 same as `DICT_get_by_bin`, a1 the bin address - **NOT IMPLEMENTED, NOT TESTED**.
 - `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> None` - `sys270` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
 
+#### Fallbacks/Bugs:
+- I `lw` instead of `lb`.
+- I encoded big endien number in the `strncmp` parametrized test, in both the length-param and the expected-result.
 
 
 

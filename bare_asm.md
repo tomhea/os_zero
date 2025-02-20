@@ -391,7 +391,7 @@ addi sp, sp, 0x8
 ret
 ```
 
-`strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER_42D0 - **HALF TESTED**.
+`strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER_42D0
 ```assembly
 // Compares Lexicographically the first n bytes of str1 and str2. 
 // Returns negative if str1 is before str2, zero if they are the same, and positive is str1 is after str2.
