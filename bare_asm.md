@@ -391,7 +391,7 @@ addi sp, sp, 0x8
 ret
 ```
 
-`strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER_42D0
+`strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER_42D0 (keep all regs)
 ```assembly
 // Compares Lexicographically the first n bytes of str1 and str2. 
 // Returns negative if str1 is before str2, zero if they are the same, and positive is str1 is after str2.
@@ -428,7 +428,7 @@ addi sp, sp, 0x14
 ret
 ```
 
-`DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER_4340
+`DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER_4340 (keep all regs)
 ```assembly
 // Expects a 0x400 bytes buffer, and initializes it as a new dictionary.
 addi x1, a0, 0x3FC
@@ -441,7 +441,7 @@ lw x1, FFC(sp)
 ret
 ```
 
-`DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER_4360 - Calculate the key
+`DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER_4360 (keep all regs)
 ```assembly
 // Returns the hash of the given string.
 // Hash algorithm: sum (modulo 256) of hashes of chars, which is: (str[i] ^ (0x53*(i+1))). 
@@ -474,6 +474,101 @@ lw x1, 0x10(sp)
 addi sp, sp, 0x14
 ret
 ```
+
+`DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Searches the given string in the given bin (linked-list). Returns pointer to the found node or NULL if not found.
+addi sp, sp, FF8
+sw t0, 0x0(sp)
+
+addi t0, a0, 0
+
+//LOOP
+lw t0, 0(t0)
+beq t0, zero, END_LOOP (0x18)
+lw a0, 0x8(t0)
+bne a0, a2, LOOP (0xFF4)
+lw a0, 0xC(t0)
+jalr x1, 0x220(gp)
+bne a0, zero, LOOP (0xFE8)
+
+//END_LOOP
+addi a0, t0, 0
+
+lw t0, 0x0(sp)
+lw x1, 0x4(sp)
+addi sp, sp, 0x8
+ret
+```
+
+`DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Searches the given string in the given dict.
+// Returns pointer to the found node or NULL if not found in a0. Returns the correct bin address in a1.
+addi sp, sp, FEC
+sw t0, 0x0(sp)
+sw t1, 0x4(sp)
+sw a2, 0xC(sp)
+
+addi t0, a0, 0  // dict
+addi t1, a1, 0  // str
+
+addi a0, a1, 0
+addi a1, a2, 0
+jalr x1, 0x240(gp)
+
+slli a0, a0, 2
+add a0, a0, t0
+sw a0, 0x8(sp)  // bin
+addi a1, t1, 0
+jalr x1, 0x250(gp)
+
+lw t0, 0x0(sp)
+lw t1, 0x4(sp)
+lw a1, 0x8(sp)
+lw a2, 0xC(sp)
+lw x1, 0x10(sp)
+addi sp, sp, 0x14
+ret
+```
+
+`DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
+```assembly
+// Inserts the string,value pair to the dict.
+// Returns the new-node address, but if the string was already in the dict it just returns NULL.
+
+// TODO! Verify this implementation.
+
+addi sp, sp, FF8
+sw a1, 0x0(sp)
+
+jalr x1, 0x260(gp)
+beq a0, zero, +0x10
+
+addi a0, zero, 0
+lw a1, 0x0(sp)
+beq zero, zero, END ???
+
+addi a0, zero, 16
+jalr x1, 0x210(gp)
+
+// Add new node as the head of the linked-list.
+lw x1, 0(a1)
+sw x1, 0(a0)
+sw a0, 0(a1)
+
+// Initialize the new node
+sw a3, 0x4(a0)
+sw a2, 0x8(a0)
+lw a1, 0x0(sp)
+sw a1, 0xC(a0)
+
+//END:
+lw x1, 0x4(sp)
+addi sp, sp, 0x8
+ret
+```
+
 
 Notes:
 1. JUMPER: The next function is called from a jumper code, meaning a code that saved `x1` to the stack without decrementing the stack pointer, and then jumped right here. The opcodes that will be written here won't contain the jumping code itself.

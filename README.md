@@ -266,13 +266,21 @@ It was indeed the tests fault! As I encoded the parameters in big endien.. Anywa
 
 I implemented and tested both `DICT_initialize` and `DICT_calculate_key`. That's the first part of creating this hash dict. Yay!
 
+For the next part I'll need to show the low-level details of what the dict looks like:
+- The dict is just 256 pointers (one for each possible hash value of `DICT_calculate_key`).
+- The pointers are the linked-list head of all the previously inserted (string,n,value) triplets.
+- A node in the list is 16 bytes, which is 4 parts of 4 bytes as following: `[ char* next; u32 value; u32 len; char* string ]`.
+- An empty list has no nodes in it and the dict bin pointer is just NULL. A non empty list ends with a node that have `next == NULL`.
+- `DICT_insert` allocates a new node by `sbrk(16)`, and no other function allocates/deallocates memory. 
+- There are no "deletions" in this dict. The most you can do is `DICT_get` a node and modify it's `len` to `FFFFFFFF`, so that it won't get found.
+
 #### Globals / Syscalls added:
 - `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER.
 - `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER.
 - `DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER.
-- `DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER - Returns pointer to the found node or NULL if not found - **NOT IMPLEMENTED, NOT TESTED**.
-- `DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER - a0 same as `DICT_get_by_bin`, a1 the bin address - **NOT IMPLEMENTED, NOT TESTED**.
-- `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> None` - `sys270` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
 
 #### Fallbacks/Bugs:
 - I `lw` instead of `lb`.
