@@ -428,7 +428,7 @@ addi sp, sp, 0x14
 ret
 ```
 
-`DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+`DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER_4340
 ```assembly
 // Expects a 0x400 bytes buffer, and initializes it as a new dictionary.
 addi x1, a0, 0x3FC

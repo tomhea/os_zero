@@ -531,7 +531,7 @@ sw a0, FA4(gp)
 
 #### Test `strncmp`: (80002880-800028E0)
 
-Parametrized (8000E980-8000EAA0):
+Parametrized (8000E980-8000EAC0):
 - `v0` - same strings, n < length
 - `v1` - same strings, n == length
 - `v2` - same strings, n > length
@@ -586,6 +586,42 @@ sw s0, 0(sp)
 lw a0, 4(sp)
 bltu s0, a0, TEST_CASE_START (-0x48)
 ```
+
+
+#### Test `DICT_initialize`: (800028F0-80002948)
+
+Uses test memory 8000EAE0-8000EF00 (0x400 bytes buffer with "guards").
+
+```assembly
+jalr x1, 1B0(gp)
+lui a0, 0x8000F
+addi a0, a0, 0xAF0
+jalr x1, 1C0(gp)
+jalr x1, 230(gp)
+jalr x1, 1C0(gp)
+
+addi a0, zero, 0xFF0  // all
+jalr x1, 1F0(gp)
+
+lui a3, 0x8000F
+addi a3, a3, 0xAF0
+addi a4, a3, 0x400
+addi a1, zero, FFF
+addi a2, zero, 0
+
+lw a0, FFC(a3)
+jalr x1, 1A0(gp)
+lw a0, 0(a4)
+jalr x1, 1A0(gp)
+
+addi a1, zero, 0
+
+lw a0, 0(a3)
+jalr x1, 1A0(gp)
+addi a3, a3, 4
+bltu a3, a4, 0xFF4
+```
+
 
 
 

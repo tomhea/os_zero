@@ -264,6 +264,8 @@ I decided to create the `asm_cheatsheet.md` notebook, for writing common encodin
 I implemented `strncmp`, write a test to it, and luckily it fails on `v6`. I'm not sure why yet, and I think it's the test's fault. 
 It was indeed the tests fault! As I encoded the parameters in big endien.. Anyway, It's good that I both write the test AND gives it a call from "main" at the same time (from address 80010000), so that I could test it withput the test's implementation.
 
+I implemented and tested `DICT_initialize`.
+
 #### Globals / Syscalls added:
 - `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER.
 - `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
