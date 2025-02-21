@@ -441,10 +441,10 @@ lw x1, FFC(sp)
 ret
 ```
 
-`DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER - Calculate the key - **NOT IMPLEMENTED, NOT TESTED**.
+`DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER_4360 - Calculate the key
 ```assembly
 // Returns the hash of the given string.
-// Hash algorithm: sum (modulo 256) of hashes of chars, which is: (str[i] ^ (0x53*i)). 
+// Hash algorithm: sum (modulo 256) of hashes of chars, which is: (str[i] ^ (0x53*(i+1))). 
 addi sp, sp, FEC
 sw t0, 0x0(sp)
 sw t1, 0x4(sp)
@@ -459,7 +459,7 @@ beq a0, a1, END (+0x1C)
 //LOOP:
 lbu t2, 0(a0)
 xor t2, t2, t0
-addi t1, t1, t2
+add t1, t1, t2
 addi t0, t0, 0x53    // The MAGIC
 addi a0, a0, 1
 bltu a0, a1, LOOP (-0x14)

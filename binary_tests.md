@@ -623,9 +623,60 @@ bltu a3, a4, 0xFF4
 ```
 
 
+#### Test `DICT_calculate_key`: (80002950-800029B0)
+
+Parametrized (8000EF00-8000EF60):
+- `v0` - "A",      n=0, expected=0x00
+- `v1` - "\x53",   n=1, expected=0x00
+- `v2` - "AB",     n=1, expected=0x12
+- `v3` - "AB",     n=2, expected=0xF6
+- `v4` - "BA",     n=2, expected=0xF8
+- `v5` - "STRING", n=6, expected=0x28
+
+Parametrization struct:
+```C
+u32 test_name_str;
+u8  length;
+u8  expected_result;
+char[10] string;
+```
+
+Test:
+```assembly
+lui a0, 0x8000F
+addi a0, a0, 0xF00
+sw a0, 0(sp)      // current param pointer
+addi a0, a0, 0x60
+sw a0, 4(sp)      // params end
+
+// TEST_CASE_START:
+jalr x1, 1B0(gp)
+lw a0, 0(sp)
+lw a2, 4(a0)          ##TODO lbu a1, 4(a0)
+nop
+nop
+addi a0, a0, 0x6
+jalr x1, 1C0(gp)
+jalr x1, 240(gp)
+jalr x1, 1C0(gp)
+
+lw s0, 0xE0(sp)
+lw a1, 8(s0)          ##TODO lbu a1, 5(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+addi a0, zero, 0xBF0  // all but a0
+jalr x1, 1F0(gp)
+
+addi s0, s0, 0x10
+sw s0, 0(sp)
+lw a0, 4(sp)
+bltu s0, a0, TEST_CASE_START (-0x48)
+```
 
 
-### Finishing code for the sys tests: (80002900-80002908)
+
+### Finishing code for the sys tests: (800029D0-800029D8)
 ```assembly
 lui x1, 0x80010
 jalr x0, 0(x1)
