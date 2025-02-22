@@ -536,9 +536,6 @@ ret
 ```assembly
 // Inserts the string,value pair to the dict.
 // Returns the new-node address, but if the string was already in the dict it just returns NULL.
-
-// TODO! Verify this implementation.
-
 addi sp, sp, FF8
 sw a1, 0x0(sp)
 
@@ -547,7 +544,7 @@ beq a0, zero, +0x10
 
 addi a0, zero, 0
 lw a1, 0x0(sp)
-beq zero, zero, END ???
+beq zero, zero, END (+0x28)
 
 addi a0, zero, 16
 jalr x1, 0x210(gp)
@@ -557,7 +554,7 @@ lw x1, 0(a1)
 sw x1, 0(a0)
 sw a0, 0(a1)
 
-// Initialize the new node
+// Initialize the new node ( char* next; u32 value; u32 len; char* string ).
 sw a3, 0x4(a0)
 sw a2, 0x8(a0)
 lw a1, 0x0(sp)
