@@ -793,13 +793,15 @@ bltu s0, a0, TEST_CASE_START (-0x5C)
 ```
 
 
-#### Test `DICT_insert`: (80002A30-80002AAC)
+#### Test `DICT_insert`: (80002AC0-80002???)
 
 Parametrized (8000F700-8000F7F0) (Also uses upto 8000FC80 for the dict):
 - `v0` - Success add "STR",len=3,val=1
 - `v1` - Failure (already exist) add "STR",len=3,val=1
 - `v2` - Failure (already exist) add "STR",len=3,val=2
-- `v3` - 
+- `v3` - Success add "AB",len=2,val=3 (its bin was empty before)
+- `v4` - Success add "STR]",len=4,val=4 (its bin wasn't empty before)
+- `v5` - Failure ("STRI" isn't in dict, but no memory for sbrk)
 
 Parametrization struct:
 ```C
@@ -821,30 +823,80 @@ u32 get_s3_res;
 Test:
 ```assembly
 lui a0, 0x8000F
-addi a0, a0, 0x180
+addi a0, a0, 0x180    ##TODO 0x700
 sw a0, 0(sp)      // current param pointer
-addi a0, a0, 0xA0
+addi a0, a0, 0xA0     ##TODO 0x120
 sw a0, 4(sp)      // params end
-addi a0, a0, 0xE0
+addi a0, a0, 0xE0     ##TODO 0x60
 sw a0, 8(sp)
+
+##TODO insert 2:
+lw a0, FA8(gp)
+sw a0, FA4(gp)
 
 // TEST_CASE_START:
 jalr x1, 1B0(gp)
 lw a0, 0(sp)
-addi a1, a0, 0x10
+addi a1, a0, 0x10     ##TODO override these 4 with:   addi a1, a0, 0x10 ; lw a2, 4(a0) ; lw a3, 8(a0) ; lw a0, 8(s0)
 lw a2, 4(a0)
 lw a0, 8(sp)
 nop
 jalr x1, 1C0(gp)
-jalr x1, 260(gp)
+jalr x1, 260(gp)      ##TODO 270(gp)
 jalr x1, 1C0(gp)
 
 lw s0, 0xE0(sp)
-lw a1, 8(s0)
+lw a1, 8(s0)          ##TODO 0x18(s0)
 addi a2, s0, 0
 jalr x1, 1A0(gp)
 
-lw a0, 0x1C(sp)
+##TODO INSERT NEXT BUNCH (7 times 0x1A0):
+// Verify all new-node fields are correct.
+addi t0, a0, 0
+lw a0, 0(t0)
+lw a1, 0x1C(s0)
+jalr x1, 1A0(gp)
+
+lw a0, 4(t0)
+lw a1, 8(s0)
+jalr x1, 1A0(gp)
+
+lw a0, 8(t0)
+lw a1, 4(s0)
+jalr x1, 1A0(gp)
+
+lw a0, C(t0)
+addi a1, s0, 0x10
+jalr x1, 1A0(gp)
+
+// Verify if the 3 strings expected to exist.
+lw a0, E8(sp)
+addi a1, gp, 0x8F8
+addi a2, zero, 3
+jalr x1, 260(gp)
+lw a1, 0x24(t0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+lw a0, E8(sp)
+addi a1, gp, 0x8FC
+addi a2, zero, 2
+jalr x1, 260(gp)
+lw a1, 0x28(t0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+lw a0, E8(sp)
+addi a1, gp, 0x8F8
+addi a2, zero, 4
+jalr x1, 260(gp)
+lw a1, 0x2C(t0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+
+
+lw a0, 0x1C(sp)         ##TODO remove this 4
 lw a1, 0xC(s0)
 addi a2, s0, 0
 jalr x1, 1A0(gp)
@@ -856,7 +908,11 @@ jalr x1, 1F0(gp)
 addi s0, s0, 0x20       ##TODO 0x30
 sw s0, 0(sp)
 lw a0, 4(sp)
-bltu s0, a0, TEST_CASE_START (-0x5C)
+bltu s0, a0, TEST_CASE_START (-D0)    ##TODO Update op new offset
+
+##TODO insert 2:
+lw a0, FA8(gp)
+sw a0, FA4(gp)
 ```
 
 
