@@ -652,7 +652,7 @@ sw a0, 4(sp)      // params end
 // TEST_CASE_START:
 jalr x1, 1B0(gp)
 lw a0, 0(sp)
-lw a2, 4(a0)          ##TODO lbu a1, 4(a0)
+lbu a1, 4(a0)
 nop
 nop
 addi a0, a0, 0x6
@@ -661,7 +661,65 @@ jalr x1, 240(gp)
 jalr x1, 1C0(gp)
 
 lw s0, 0xE0(sp)
-lw a1, 8(s0)          ##TODO lbu a1, 5(s0)
+lbu a1, 5(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+addi a0, zero, 0xBF0  // all but a0
+jalr x1, 1F0(gp)
+
+addi s0, s0, 0x10
+sw s0, 0(sp)
+lw a0, 4(sp)
+bltu s0, a0, TEST_CASE_START (-0x48)
+```
+
+#### Test `DICT_calculate_key`: (800029C0-80002A20)
+
+Parametrized (8000EF80-8000F020) (Also uses upto 8000F140 for the linked lists):
+- All the tests search the "string", n=6 in the given linked-list.
+- `v0` - Empty list.
+- `v1` - List with 1 correct node.
+- `v2` - List with 1 bad node (both str and n).
+- `v3` - List with 1 node, same n not same str.
+- `v4` - List with 1 node, same str but smaller n.
+- `v5` - List with 1 node, same str but bigger n.
+- `v6` - List with 3 nodes, none are correct.
+- `v7` - List with 4 nodes, first is correct.
+- `v8` - List with 6 nodes, middle (third) is correct.
+- `v9` - List with 4 nodes, last is correct.
+
+Parametrization struct:
+```C
+u32 test_name_str;
+u32 bin;
+u32 expected_result;
+u32 padding;
+```
+
+Test:
+```assembly
+lui a0, 0x8000F
+addi a0, a0, 0xF80
+sw a0, 0(sp)      // current param pointer
+addi a0, a0, 0xA0
+sw a0, 4(sp)      // params end
+addi a0, a0, 0x20
+sw a0, 8(sp)
+
+// TEST_CASE_START:
+jalr x1, 1B0(gp)
+lw a0, 0(sp)
+lw a1, 8(sp)
+addi a2, zero, 0x6
+nop
+addi a0, a0, 0x4
+jalr x1, 1C0(gp)
+jalr x1, 250(gp)
+jalr x1, 1C0(gp)
+
+lw s0, 0xE0(sp)
+lw a1, 8(s0)
 addi a2, s0, 0
 jalr x1, 1A0(gp)
 
@@ -676,7 +734,7 @@ bltu s0, a0, TEST_CASE_START (-0x48)
 
 
 
-### Finishing code for the sys tests: (800029D0-800029D8)
+### Finishing code for the sys tests: (80002A40-80002A48)
 ```assembly
 lui x1, 0x80010
 jalr x0, 0(x1)

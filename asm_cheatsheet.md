@@ -21,10 +21,15 @@ lw R, off(gp)         of f1 A{R/2} {8/0}3
 addi R, gp, off:      of f1 8{R/2} {9/1}3
 ```
 
+Call functions:
+```
+jalr x1, 0xXY0(gp):   E78001XY (correct order)
+ret:                  67800000 (correct order)
+```
+
 Parametrized tests:
 ```assembly
-lw s0, 0(sp):         00 81    20    23
-lw R, off(s0):        00 R4 2{off/2} 23
+lw R, off(s0):        of f4 2{R/2} {8/0}3
 ```
 
 Examining Values:

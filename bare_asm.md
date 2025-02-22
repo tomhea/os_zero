@@ -475,7 +475,7 @@ addi sp, sp, 0x14
 ret
 ```
 
-`DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
+`DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER_43C0 (keep all regs)
 ```assembly
 // Searches the given string in the given bin (linked-list). Returns pointer to the found node or NULL if not found.
 addi sp, sp, FF8
