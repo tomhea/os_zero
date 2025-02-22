@@ -441,10 +441,10 @@ lw x1, FFC(sp)
 ret
 ```
 
-`DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER_4360 (keep all regs)
+`DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER_4358 (keep all regs)
 ```assembly
 // Returns the hash of the given string.
-// Hash algorithm: sum (modulo 256) of hashes of chars, which is: (str[i] ^ (0x53*(i+1))). 
+// Hash algorithm: sum (modulo 256) of hashes of chars, which is: (SBOX[str[i]] ^ (0x53*(i+1))). 
 addi sp, sp, FEC
 sw t0, 0x0(sp)
 sw t1, 0x4(sp)
@@ -455,14 +455,22 @@ addi t0, zero, 0x53  // The MAGIC
 add a1, a0, a1       // str_end
 addi t1, zero, 0     // current result
 
-beq a0, a1, END (+0x1C)
+##TODO add this op:
+lw x1, 0xFA0(gp)     // SBOX
+
+beq a0, a1, END (+0x24)
 //LOOP:
 lbu t2, 0(a0)
+
+##TODO add next two:
+add t2, x1, t2
+lbu t2, 0(t2)
+
 xor t2, t2, t0
 add t1, t1, t2
 addi t0, t0, 0x53    // The MAGIC
 addi a0, a0, 1
-bltu a0, a1, LOOP (-0x14)
+bltu a0, a1, LOOP (-0x1C)
 
 //END:
 andi a0, t1, 0xFF
@@ -532,7 +540,7 @@ addi sp, sp, 0x14
 ret
 ```
 
-`DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
+`DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER_4460 (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
 ```assembly
 // Inserts the string,value pair to the dict.
 // Returns the new-node address, but if the string was already in the dict (or sbrk failed) it just returns NULL.
@@ -546,7 +554,7 @@ addi a0, zero, 0
 lw a1, 0x0(sp)
 beq zero, zero, END (+0x2C)
 
-addi a0, zero, 16
+addi a0, zero, 0x10
 jalr x1, 0x210(gp)
 beq a0, zero, -0x10
 
@@ -599,3 +607,4 @@ Notes:
 - `binary_heap_segment_end` - `g_FAC` - Constant 0x82000000.
 - `binary_heap_segment_start` - `g_FA8` - Constant 0x81000000.
 - `binary_heap_top` - `g_FA4` - Initialized with "segment_start", and represent the first unallocated byte in the binary_heap.
+- `s_box_ptr` - `g_FA0` - Pointer to the Rijndael S-box (AES lookup table).

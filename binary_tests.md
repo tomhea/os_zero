@@ -627,11 +627,11 @@ bltu a3, a4, 0xFF4
 
 Parametrized (8000EF00-8000EF60):
 - `v0` - "A",      n=0, expected=0x00
-- `v1` - "\x53",   n=1, expected=0x00
-- `v2` - "AB",     n=1, expected=0x12
-- `v3` - "AB",     n=2, expected=0xF6
-- `v4` - "BA",     n=2, expected=0xF8
-- `v5` - "STRING", n=6, expected=0x28
+- `v1` - "\x50",   n=1, expected=0x00
+- `v2` - "AB",     n=1, expected=0xD0
+- `v3` - "AB",     n=2, expected=0x5A
+- `v4` - "BA",     n=2, expected=0xA4
+- `v5` - "STRING", n=6, expected=0xB6
 
 Parametrization struct:
 ```C
@@ -792,6 +792,72 @@ lw a0, 4(sp)
 bltu s0, a0, TEST_CASE_START (-0x5C)
 ```
 
+
+#### Test `DICT_insert`: (80002A30-80002AAC)
+
+Parametrized (8000F700-8000F7F0) (Also uses upto 8000FC80 for the dict):
+- `v0` - Success add "STR",len=3,val=1
+- `v1` - Failure (already exist) add "STR",len=3,val=1
+- `v2` - Failure (already exist) add "STR",len=3,val=2
+- `v3` - 
+
+Parametrization struct:
+```C
+u32 test_name_str;
+u32 str_len;
+u32 value;
+u32 sbrk_by;
+
+char[8] str;
+u32 expected_result;
+u32 expected_next;
+
+u32 expected_top;
+u32 get_s1_res;
+u32 get_s2_res;
+u32 get_s3_res;
+```
+
+Test:
+```assembly
+lui a0, 0x8000F
+addi a0, a0, 0x180
+sw a0, 0(sp)      // current param pointer
+addi a0, a0, 0xA0
+sw a0, 4(sp)      // params end
+addi a0, a0, 0xE0
+sw a0, 8(sp)
+
+// TEST_CASE_START:
+jalr x1, 1B0(gp)
+lw a0, 0(sp)
+addi a1, a0, 0x10
+lw a2, 4(a0)
+lw a0, 8(sp)
+nop
+jalr x1, 1C0(gp)
+jalr x1, 260(gp)
+jalr x1, 1C0(gp)
+
+lw s0, 0xE0(sp)
+lw a1, 8(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+lw a0, 0x1C(sp)
+lw a1, 0xC(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+lui a0, 0xFFFFF         ##TODO replace 2 ops with just 1: addi BF0
+addi a0, a0, 0x3F0  // all but a0,a1
+jalr x1, 1F0(gp)
+
+addi s0, s0, 0x20       ##TODO 0x30
+sw s0, 0(sp)
+lw a0, 4(sp)
+bltu s0, a0, TEST_CASE_START (-0x5C)
+```
 
 
 ### Finishing code for the sys tests: (80002AC0-80002AC8)

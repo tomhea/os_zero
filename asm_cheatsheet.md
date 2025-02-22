@@ -1,5 +1,4 @@
 # Assembly Cheat-Sheet
-
 Here I'll write encodings that appear a lot of times:
 
 Stack:
