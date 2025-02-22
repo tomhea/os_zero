@@ -252,7 +252,7 @@ After that, implementing `sbrk` was easy, and for its parametrized tests I basic
 
 
 
-## Part 6 - dictos (**CURRENT**)
+## Part 6 - dictos
 
 In this operation system I'm going to implement a dictionary data structure (256-bins hashmap) using hand-coded assembly, Thus - `dictos`.
 It will be very helpful for writing an assembler in the future version, `asos`.
@@ -290,7 +290,9 @@ Now I have to modify the tests of `DICT_calculate_key` and `DICT_get`.
 
 I updated it all to the new hash. Now I just need to test `DICT_insert`.
 
+I implemented the HUGE `Dict_insert` test, and it works!
 
+`dictos` is done!
 
 #### Globals / Syscalls added:
 - `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER.
@@ -298,7 +300,7 @@ I updated it all to the new hash. Now I just need to test `DICT_insert`.
 - `DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER.
 - `DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER.
 - `DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER.
-- `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER - **NOT TESTED**.
+- `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER.
 - `s_box_ptr` - `g_FA0`.
 
 #### Fallbacks/Bugs:
@@ -307,7 +309,7 @@ I updated it all to the new hash. Now I just need to test `DICT_insert`.
 
 
 
-## Part 7 - skeleton_asos (**NEXT**)
+## Part 7 - skeleton_asos (**CURRENT**)
 
 `asos` is **as**sembly **os** (see next os version). This version will implement the skeleton for the assembler.
 

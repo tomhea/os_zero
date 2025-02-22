@@ -793,7 +793,7 @@ bltu s0, a0, TEST_CASE_START (-0x5C)
 ```
 
 
-#### Test `DICT_insert`: (80002AC0-80002???)
+#### Test `DICT_insert`: (80002AC0-80002BDC)
 
 Parametrized (8000F700-8000F7F0) (Also uses upto 8000FC80 for the dict):
 - `v0` - Success add "STR",len=3,val=1
@@ -823,36 +823,43 @@ u32 get_s3_res;
 Test:
 ```assembly
 lui a0, 0x8000F
-addi a0, a0, 0x180    ##TODO 0x700
+addi a0, a0, 0x700
 sw a0, 0(sp)      // current param pointer
-addi a0, a0, 0xA0     ##TODO 0x120
+addi a0, a0, 0x120
 sw a0, 4(sp)      // params end
-addi a0, a0, 0xE0     ##TODO 0x60
+addi a0, a0, 0x60
 sw a0, 8(sp)
 
-##TODO insert 2:
 lw a0, FA8(gp)
 sw a0, FA4(gp)
 
 // TEST_CASE_START:
+lw a0, 0(sp)
+lw a0, C(a0)
+jalr x1, 210(gp)
+
 jalr x1, 1B0(gp)
 lw a0, 0(sp)
-addi a1, a0, 0x10     ##TODO override these 4 with:   addi a1, a0, 0x10 ; lw a2, 4(a0) ; lw a3, 8(a0) ; lw a0, 8(s0)
+addi a1, a0, 0x10
 lw a2, 4(a0)
+lw a3, 8(a0)
 lw a0, 8(sp)
-nop
 jalr x1, 1C0(gp)
-jalr x1, 260(gp)      ##TODO 270(gp)
+jalr x1, 270(gp)
 jalr x1, 1C0(gp)
 
 lw s0, 0xE0(sp)
-lw a1, 8(s0)          ##TODO 0x18(s0)
+lw a1, 0x18(s0)
 addi a2, s0, 0
 jalr x1, 1A0(gp)
 
-##TODO INSERT NEXT BUNCH (7 times 0x1A0):
-// Verify all new-node fields are correct.
 addi t0, a0, 0
+lw a0, FA4(gp)
+lw a1, 0x20(s0)
+jalr x1, 1A0(gp)
+beq t0, zero, +0x34
+
+// Verify all new-node fields are correct.
 lw a0, 0(t0)
 lw a1, 0x1C(s0)
 jalr x1, 1A0(gp)
@@ -874,7 +881,7 @@ lw a0, E8(sp)
 addi a1, gp, 0x8F8
 addi a2, zero, 3
 jalr x1, 260(gp)
-lw a1, 0x24(t0)
+lw a1, 0x24(s0)
 addi a2, s0, 0
 jalr x1, 1A0(gp)
 
@@ -882,7 +889,7 @@ lw a0, E8(sp)
 addi a1, gp, 0x8FC
 addi a2, zero, 2
 jalr x1, 260(gp)
-lw a1, 0x28(t0)
+lw a1, 0x28(s0)
 addi a2, s0, 0
 jalr x1, 1A0(gp)
 
@@ -890,33 +897,25 @@ lw a0, E8(sp)
 addi a1, gp, 0x8F8
 addi a2, zero, 4
 jalr x1, 260(gp)
-lw a1, 0x2C(t0)
+lw a1, 0x2C(s0)
 addi a2, s0, 0
 jalr x1, 1A0(gp)
 
-
-
-lw a0, 0x1C(sp)         ##TODO remove this 4
-lw a1, 0xC(s0)
-addi a2, s0, 0
-jalr x1, 1A0(gp)
-
-lui a0, 0xFFFFF         ##TODO replace 2 ops with just 1: addi BF0
-addi a0, a0, 0x3F0  // all but a0,a1
+addi a0, zero, 0xBF0  // all but a0
 jalr x1, 1F0(gp)
 
-addi s0, s0, 0x20       ##TODO 0x30
+addi s0, s0, 0x30
 sw s0, 0(sp)
 lw a0, 4(sp)
-bltu s0, a0, TEST_CASE_START (-D0)    ##TODO Update op new offset
+bltu s0, a0, TEST_CASE_START (-EC)
 
-##TODO insert 2:
 lw a0, FA8(gp)
 sw a0, FA4(gp)
 ```
 
 
-### Finishing code for the sys tests: (80002AC0-80002AC8)
+
+### Finishing code for the sys tests: (80002C00-80002C08)
 ```assembly
 lui x1, 0x80010
 jalr x0, 0(x1)
