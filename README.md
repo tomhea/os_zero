@@ -274,6 +274,15 @@ For the next part I'll need to show the low-level details of what the dict looks
 - `DICT_insert` allocates a new node by `sbrk(16)`, and no other function allocates/deallocates memory. 
 - There are no "deletions" in this dict. The most you can do is `DICT_get` a node and modify it's `len` to `FFFFFFFF`, so that it won't get found.
 
+I took some time and wrote the text-assembly for each of the next 3 DICT functions, and planned on paper how I would test each function. It will take some time.
+
+Let's remember what's it all for - After the dict functions are implemented and tested, I will be able to write an assembler. 
+And after testing it and every opcode, I will be able to just write textual-assembly and make my life much easier. 
+Then, I will be able to implement an actual compiler, and after testing it I will be able to write C-style code and actually start writing an OS, drivers, real programs much easier. Even just an assembler will be enough.
+Just be patient. Today we focus on writing some dict functions.
+
+
+
 #### Globals / Syscalls added:
 - `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER.
 - `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER.

@@ -535,7 +535,7 @@ ret
 `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
 ```assembly
 // Inserts the string,value pair to the dict.
-// Returns the new-node address, but if the string was already in the dict it just returns NULL.
+// Returns the new-node address, but if the string was already in the dict (or sbrk failed) it just returns NULL.
 addi sp, sp, FF8
 sw a1, 0x0(sp)
 
@@ -544,10 +544,11 @@ beq a0, zero, +0x10
 
 addi a0, zero, 0
 lw a1, 0x0(sp)
-beq zero, zero, END (+0x28)
+beq zero, zero, END (+0x2C)
 
 addi a0, zero, 16
 jalr x1, 0x210(gp)
+beq a0, zero, -0x10
 
 // Add new node as the head of the linked-list.
 lw x1, 0(a1)
