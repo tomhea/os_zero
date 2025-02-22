@@ -281,14 +281,14 @@ And after testing it and every opcode, I will be able to just write textual-asse
 Then, I will be able to implement an actual compiler, and after testing it I will be able to write C-style code and actually start writing an OS, drivers, real programs much easier. Even just an assembler will be enough.
 Just be patient. Today we focus on writing some dict functions.
 
-`DICT_get_by_bin` is implemented and tested.
+`DICT_get_by_bin` and `DICT_get` are implemented and tested. One to go.
 
 #### Globals / Syscalls added:
 - `strncmp(str1: a0, str2: a1, n: a2) -> a0` - `sys220` JUMPER.
 - `DICT_initialize(buffer: a0) -> None` - `sys230` JUMPER.
 - `DICT_calculate_key(str: a0, n: a1) -> a0` - `sys240` JUMPER.
 - `DICT_get_by_bin(bin: a0, str: a1, n: a2) -> a0` - `sys250` JUMPER.
-- `DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
+- `DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER.
 - `DICT_insert(dict: a0, str: a1, n: a2, value: a3) -> a0` - `sys270` JUMPER - **NOT IMPLEMENTED, NOT TESTED**.
 
 #### Fallbacks/Bugs:

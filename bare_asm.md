@@ -501,7 +501,7 @@ addi sp, sp, 0x8
 ret
 ```
 
-`DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER (keep all regs) - **NOT IMPLEMENTED, NOT TESTED**.
+`DICT_get(dict: a0, str: a1, n: a2) -> a0, a1` - `sys260` JUMPER_4400 (keep all regs)
 ```assembly
 // Searches the given string in the given dict.
 // Returns pointer to the found node or NULL if not found in a0. Returns the correct bin address in a1.

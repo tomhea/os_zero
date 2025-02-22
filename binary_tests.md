@@ -674,7 +674,7 @@ lw a0, 4(sp)
 bltu s0, a0, TEST_CASE_START (-0x48)
 ```
 
-#### Test `DICT_calculate_key`: (800029C0-80002A20)
+#### Test `DICT_get_by_bin`: (800029C0-80002A28)
 
 Parametrized (8000EF80-8000F020) (Also uses upto 8000F140 for the linked lists):
 - All the tests search the "string", n=6 in the given linked-list.
@@ -733,8 +733,68 @@ bltu s0, a0, TEST_CASE_START (-0x48)
 ```
 
 
+#### Test `DICT_get`: (80002A30-80002AAC)
 
-### Finishing code for the sys tests: (80002A40-80002A48)
+Parametrized (8000F180-8000F220) (Also uses upto 8000F700 for the linked lists and the dict):
+- `v0` - nothing in the bin.
+- `v1` - List of 1 in the bin, but other word.
+- `v2` - List of 1 in the bin, exactly the word.
+- `v3` - List of 2 in the bin, Not the word.
+- `v4` - List of 3 in the bin, The word is last.
+
+Parametrization struct:
+```C
+u32 test_name_str;
+u32 str_len;
+u32 expected_a0; // node
+u32 expected_a1; // bin
+char[16] str;
+```
+
+Test:
+```assembly
+lui a0, 0x8000F
+addi a0, a0, 0x180
+sw a0, 0(sp)      // current param pointer
+addi a0, a0, 0xA0
+sw a0, 4(sp)      // params end
+addi a0, a0, 0xE0
+sw a0, 8(sp)
+
+// TEST_CASE_START:
+jalr x1, 1B0(gp)
+lw a0, 0(sp)
+addi a1, a0, 0x10
+lw a2, 4(a0)
+lw a0, 8(sp)
+nop
+jalr x1, 1C0(gp)
+jalr x1, 260(gp)
+jalr x1, 1C0(gp)
+
+lw s0, 0xE0(sp)
+lw a1, 8(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+lw a0, 0x1C(sp)
+lw a1, 0xC(s0)
+addi a2, s0, 0
+jalr x1, 1A0(gp)
+
+lui a0, 0xFFFFF
+addi a0, a0, 0x3F0  // all but a0,a1
+jalr x1, 1F0(gp)
+
+addi s0, s0, 0x20
+sw s0, 0(sp)
+lw a0, 4(sp)
+bltu s0, a0, TEST_CASE_START (-0x5C)
+```
+
+
+
+### Finishing code for the sys tests: (80002AC0-80002AC8)
 ```assembly
 lui x1, 0x80010
 jalr x0, 0(x1)
