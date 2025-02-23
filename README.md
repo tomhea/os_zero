@@ -311,13 +311,67 @@ I implemented the HUGE `Dict_insert` test, and it works!
 
 ## Part 7 - skeleton_asos (**CURRENT**)
 
-`asos` is **as**sembly **os** (see next os version). This version will implement the skeleton for the assembler.
+`asos` is **as**sembly **os** (see next os version). This version will implement the skeleton for the assembler, thus `skeleton_asos`.
 
-This version will setup all the code functions, and a parsing mechanism that sends assembly-text-line into the correct handler, but the actual handlers will just "write" some 4-byte ascii message related to the op (with the last byte being \n for easy reading. Maybe the 3 bytes will be the "return address to the `sys_XXX` function. Maybe "oB7\n" for sys_B70).
+This version will setup all the code functions, and a parsing mechanism that sends assembly-text-line into the correct handler, 
+but the actual handlers will just "write" some 4-byte ascii message related to the op 
+(with the last byte being \n for easy reading. Maybe the 3 bytes will be the "return address to the `sys_XXX` function. Maybe "oB7\n" for sys_B70).
 
 The handlers will have a `sys_XXX` address (40-50 funcs), but they'll just each call the "unimplemented handler" (another `sys_YYY`) with the correct op string parameter.
 
 Each of the assembler mechanism, functions, will be unit-tested.
+
+The philosophy behind `asos` is to be SIMPLE, yet enough:
+1. I don't have to support encoding instructions that I won't use (I could always write those intructions by `.data`).
+2. Should run fast, and be fully tested.
+3. Should be generic, and simple to use.
+4. Should print extensive errors on every problem in every line of code.
+5. Should be fast to develop, and easy to extend (up to extra 20 future ops/directives).
+
+The end-goal is to be able to compile "C" code into rv32g, that should be enugh to write a standard library and an os, and drivers and gui and so on, which means the next riscv extensions:
+- M - Multiplication/division
+- A - Atomic
+- F - single-precision floating-point
+- D - double-precision floating-point
+- Zicsr - CSR instructions
+- Zifencei - Intruction-fetch fence
+
+Ops to be supported by the assembler - All the rv32im ops (+assembly directives):
+- lui, auipc, jal, jalr, beq, bne, blt, bge, bltu, bgeu
+- lb, lh, lw, lbu, lhu, sb, sh, sw
+- addi, slti, sltiu, xori, ori, andi, slli, srli, srai
+- add, sub, sll, slt, sltu, xor, srl, sra, or, and
+- mul, mulh, mulhsu, mulhu, div, divu, rem, remu
+- fence.tso, fence, pause, ecall, ebreak, fence.i
+- sret, mret, wfi
+- csrrw, csrrs, csrrc, csrrwi, csrrsi, csrrci
+- amoor.w, amoand.w, amoswap.w, lr.w, sc.w
+- li, la PCREL, mv, neg, not, j PCREL, jr, call PCREL, ret, nop, sys (call sys), 
+- :label:
+- .op HEX, .data N HEXBYTES, .ascii CHARS, .org ADDRESS, .align BYTESIZE, .end
+- Extra space for 18 future instructions.
+
+Ops that won't be supported, but could be implemented using `.data`:
+- Rest of the the privileged instructions.
+- Most of Atomic extension
+- Both single/double floating-point extensions.
+
+So that's a total of 82 supported assembly directives, besides labels, and the extra reserved 18.
+
+I'll have to focus so much here. 82 ops is a lot, defenetly for hand-coding each, and testing each.
+
+I think that this version will compile each of these to "jump" to a function that'll print the IP of the unimplemented op, and it's kind?
+
+Now I need to come up with the main functions of this part. 
+It might come in handy to use some fixed registers for some fixed purposes, like "labels dict", "ops dict", "current op", "write op", "end_pointer", ...
+I think that I'll allocate the next 6 registers for "fixed purposes": s2-s7.
+
+
+#### Globals / Syscalls added:
+- `asm(src_address: a0, dst_address: a1, src_len: a2, dst_len: a3) -> a0` - Returns 0 on success - **NOT IMPLEMENTED, NOT TESTED**.
+- `labels_pass(src_address: a0, src_len: a1, labels_dict: a2) -> a0` - Returns 0 on success - **NOT IMPLEMENTED, NOT TESTED**.
+- `build_ops_dict(???) -> ???` - **NOT IMPLEMENTED, NOT TESTED**.
+- `asm_pass(???) -> ???` - **NOT IMPLEMENTED, NOT TESTED**.
 
 
 
