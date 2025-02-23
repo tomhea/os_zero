@@ -309,9 +309,11 @@ I implemented the HUGE `Dict_insert` test, and it works!
 
 
 
-## Part 7 - skeleton_asos (**CURRENT**)
+## Part 7 - asos_helpers (**CURRENT**)
 
 `asos` is **as**sembly **os** (see next os version). This version will implement the skeleton for the assembler, thus `skeleton_asos`.
+
+As you'll read in the following part, I decided to split it into 3 parts, and the first will be `asos_helpers`, thus this will be the part's name.
 
 This version will setup all the code functions, and a parsing mechanism that sends assembly-text-line into the correct handler, 
 but the actual handlers will just "write" some 4-byte ascii message related to the op 
@@ -345,11 +347,11 @@ Ops to be supported by the assembler - All the rv32im ops (+assembly directives)
 - fence.tso, fence, pause, ecall, ebreak, fence.i
 - sret, mret, wfi
 - csrrw, csrrs, csrrc, csrrwi, csrrsi, csrrci
-- amoor.w, amoand.w, amoswap.w, lr.w, sc.w
+- amoor, amoand, amoswap, lr, sc
 - li, la PCREL, mv, neg, not, j PCREL, jr, call PCREL, ret, nop, sys (call sys), 
 - :label:
 - .op HEX, .data N HEXBYTES, .ascii CHARS, .org ADDRESS, .align BYTESIZE, .end
-- Extra space for 18 future instructions.
+- Extra space for 20 future instructions.
 
 Ops that won't be supported, but could be implemented using `.data`:
 - Rest of the the privileged instructions.
@@ -364,8 +366,40 @@ I think that this version will compile each of these to "jump" to a function tha
 
 Now I need to come up with the main functions of this part. 
 It might come in handy to use some fixed registers for some fixed purposes, like "labels dict", "ops dict", "current op", "write op", "end_pointer", ...
-I think that I'll allocate the next 6 registers for "fixed purposes": s2-s7.
 
+I think that I'll allocate the next 6 registers for "fixed purposes": s2-s7:
+- `s2` - `global_text_pointer` (`tptr`).
+- `s3` - `current_binary_offset`.
+- `s4` - `labels_dict`.
+
+This version requires many decisions. After some thought, here they are:
+- All the binary encoded code will be BEFORE the first textual-assembly. Writing assembly will never be before some encoded blob. If there is not enough code space until 0x80010000, I'll make the cut above it.
+- The result of the assembler is a binary file with a new format:
+   - It has a small header `[ u32 magic="os0". u32 entry_point_offset. u32 import_table_offset. u32 export_table_offset. u32 binary_name_offset. u32 flags=0. ]`.
+   - `import_table` points to a `u32 length` followed by `length` entries of `u32 str_ptr`, which will be replaced by the address of the external function named as the pointed string (which is `f"{binary_name}.{func_name}"`).
+   - `export_table` points to a `u32 length` followed by `length` entries of `[ u32 str_ptr. u32 func_offset ]` - These are the external functions offered to other binaries, can be imported by importing `f"{binary_name}.{func_name}"` (`func_name` is the string that `str_ptr` points to).
+- The opt dict will be built from this structure: `[ u32 asm_func. u32 size_func. u8 op_name_length. u8[7] op_name ]`. 
+   - These will be saved in some free 0x800 space in memory, and the `op_dict` can use direct pointers into it (its values are `[ u32 asm_func. u32 size_func ]`).
+   - The actual `asm_func`s will be in a JUMPER table of size 0x800 (max 128 ops, so some are reserved).
+   - In the skeleton os version I'll implement all `size_func`s but not any `asm_func`s - Those will point to the `default_op_handler()`.
+- White spaces are `' '`, `'\t'`, `','`. Line ends in `'\r'`, `'\n'`, `'#'` (comment start).
+- Helper global_pointer `sys` funcs (only those allowed to modift the text pointer: `skip_ws(), advance_to_next_line(), skip_until_ws(), skip_until_label_end(), advance_1()`.
+- General helper funcs: `is_line_end(), calc_label(str, n, relative?)->int_val, default_op_handler(), print_line_error(), addvance_binary_ptr_4(), addvance_binary_ptr_8(), print_and_exit()`.
+- Main assembler funcs: `asm_mem_file(), asm_line(), label_pass(), label_pass_line()`.
+- What the "main" will do? (Need `load_ops_dict(), load_mem_bin_to_memory()` functions for it):
+   1. Print "tests success"
+   2. Loads the ops_dict.
+   3. Executes `asm_mem_file()`.
+   4. (Optional) Loads "system funcs" exports to memory.
+   5. Loads the file to memory.
+   6. Jumo to the loaded entry address.
+
+I just undertand how this part is HUGE. I'll need to split it somehow. Split idea:
+- `asos_helpers` - Implement and test the `Helper global_pointer` and the `General helper funcs` functions.
+- `asos_origins` - Implement and test the `Main assembler funcs` functions.
+- `asos_skeleton` - Implement the main, "default" ops_dict, and make it all work. unit test it and also parametrize-test the entire process.
+
+Fuck. That's gonna be a long process.
 
 #### Globals / Syscalls added:
 - `asm(src_address: a0, dst_address: a1, src_len: a2, dst_len: a3) -> a0` - Returns 0 on success - **NOT IMPLEMENTED, NOT TESTED**.
@@ -375,11 +409,23 @@ I think that I'll allocate the next 6 registers for "fixed purposes": s2-s7.
 
 
 
-## Part 8 - asos (**NEXT**)
+## Part 8 - asos_origins (**NEXT**)
+
+This part will be another step forward into a working assembler. In this part I'll implement and test the main textual parsing functions (but not the op handlers themselves).
+
+
+
+## Part 9 - asos_skeleton (**NEXT**)
+
+In this part I'm gonna make the entire assembly process work! It won't assemble to the actual desired ops, but all the ops will be parsed in their desired op handler jumper functions.
+
+
+
+## Part 10 - asos (**NEXT**)
 
 `asos` is **as**sembly **os**.
 
 This version will be an actual assembler, written byte by byte, to assemble a piece of memory as text, into assembly binary, and execute it.
 It will allow me to continue much more easily after it's done, and very tested.
 
-In this step we will implement each of the `sys_XXX` handlers from the previous part.
+In this step we will implement each of the ops handlers, that the previous part pointed them to the default op handler.
